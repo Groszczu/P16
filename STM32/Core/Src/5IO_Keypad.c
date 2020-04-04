@@ -238,23 +238,23 @@ static uint32_t GndScanDetection(void)
 	{
 		if(GET_IO_KEY_1 == 0)
 		{
-			ReValue = KEY_VALUE_UP;	
+			ReValue = KEY_VALUE_REVERSED_LEFT; //KEY_VALUE_LEFT;
 		}
 		else if((GET_IO_KEY_2 == 0))
 		{
-			ReValue = KEY_VALUE_DOWN;
+			ReValue = KEY_VALUE_REVERSED_UP; //KEY_VALUE_UP;
 		}
 		else if((GET_IO_KEY_3 == 0))
 		{
-			ReValue = KEY_VALUE_LEFT;
+			ReValue = KEY_VALUE_PRESS;
 		}
 		else if((GET_IO_KEY_4 == 0))
 		{
-			ReValue = KEY_VALUE_RIGHT;
+			ReValue = KEY_VALUE_REVERSED_DOWN; //KEY_VALUE_DOWN;
 		}
 		else if((GET_IO_KEY_5 == 0))
 		{
-			ReValue = KEY_VALUE_PRESS;
+			ReValue = KEY_VALUE_REVERSED_RIGHT; //KEY_VALUE_RIGHT;
 		}	
 
 		CurrentKeyState = GND_OVER;

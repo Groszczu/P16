@@ -35,15 +35,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  15 .debug_ranges 00000ae8  00000000  00000000  000372d0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00023d11  00000000  00000000  00037db8  2**0
+ 16 .debug_macro  00023d29  00000000  00000000  00037db8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000d57e  00000000  00000000  0005bac9  2**0
+ 17 .debug_line   0000d57e  00000000  00000000  0005bae1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000c46e3  00000000  00000000  00069047  2**0
+ 18 .debug_str    000c477d  00000000  00000000  0006905f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  0012d72a  2**0
+ 19 .comment      0000007b  00000000  00000000  0012d7dc  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003744  00000000  00000000  0012d7a8  2**2
+ 20 .debug_frame  00003744  00000000  00000000  0012d858  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -741,7 +741,7 @@ static void ConfigurationLine1(void)
  80007f0:	683b      	ldr	r3, [r7, #0]
 
   GPIO_InitStructure.Pin = IO_KEY_1;
- 80007f2:	f44f 6300 	mov.w	r3, #2048	; 0x800
+ 80007f2:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  80007f6:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  80007f8:	2302      	movs	r3, #2
@@ -756,7 +756,7 @@ static void ConfigurationLine1(void)
  8000806:	f001 f80f 	bl	8001828 <HAL_GPIO_Init>
 
   GPIO_InitStructure.Pin = IO_KEY_2 | IO_KEY_3 | IO_KEY_4 | IO_KEY_5;
- 800080a:	f44f 4370 	mov.w	r3, #61440	; 0xf000
+ 800080a:	f44f 43f0 	mov.w	r3, #30720	; 0x7800
  800080e:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  8000810:	2302      	movs	r3, #2
@@ -775,7 +775,7 @@ static void ConfigurationLine1(void)
 
   HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1, GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
  8000826:	2201      	movs	r2, #1
- 8000828:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 8000828:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  800082c:	4804      	ldr	r0, [pc, #16]	; (8000840 <ConfigurationLine1+0x70>)
  800082e:	f001 f9ad 	bl	8001b8c <HAL_GPIO_WritePin>
 }
@@ -812,7 +812,7 @@ static void ConfigurationLine2(void)
  8000864:	683b      	ldr	r3, [r7, #0]
 
   GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2;
- 8000866:	f44f 53c0 	mov.w	r3, #6144	; 0x1800
+ 8000866:	f44f 4340 	mov.w	r3, #49152	; 0xc000
  800086a:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  800086c:	2302      	movs	r3, #2
@@ -827,7 +827,7 @@ static void ConfigurationLine2(void)
  800087a:	f000 ffd5 	bl	8001828 <HAL_GPIO_Init>
 
   GPIO_InitStructure.Pin = IO_KEY_3 | IO_KEY_4 | IO_KEY_5;
- 800087e:	f44f 4360 	mov.w	r3, #57344	; 0xe000
+ 800087e:	f44f 5360 	mov.w	r3, #14336	; 0x3800
  8000882:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  8000884:	2302      	movs	r3, #2
@@ -846,12 +846,12 @@ static void ConfigurationLine2(void)
 
 	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_2, GPIO_PIN_SET); 	//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_2);
  800089a:	2201      	movs	r2, #1
- 800089c:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 800089c:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  80008a0:	4807      	ldr	r0, [pc, #28]	; (80008c0 <ConfigurationLine2+0x7c>)
  80008a2:	f001 f973 	bl	8001b8c <HAL_GPIO_WritePin>
 	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1, GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
  80008a6:	2200      	movs	r2, #0
- 80008a8:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 80008a8:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  80008ac:	4804      	ldr	r0, [pc, #16]	; (80008c0 <ConfigurationLine2+0x7c>)
  80008ae:	f001 f96d 	bl	8001b8c <HAL_GPIO_WritePin>
 }
@@ -888,7 +888,7 @@ static void ConfigurationLine3(void)
  80008e4:	683b      	ldr	r3, [r7, #0]
 
   GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2 | IO_KEY_3;
- 80008e6:	f44f 5360 	mov.w	r3, #14336	; 0x3800
+ 80008e6:	f44f 4360 	mov.w	r3, #57344	; 0xe000
  80008ea:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  80008ec:	2302      	movs	r3, #2
@@ -903,7 +903,7 @@ static void ConfigurationLine3(void)
  80008fa:	f000 ff95 	bl	8001828 <HAL_GPIO_Init>
 
   GPIO_InitStructure.Pin = IO_KEY_4 | IO_KEY_5;
- 80008fe:	f44f 4340 	mov.w	r3, #49152	; 0xc000
+ 80008fe:	f44f 53c0 	mov.w	r3, #6144	; 0x1800
  8000902:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  8000904:	2302      	movs	r3, #2
@@ -922,7 +922,7 @@ static void ConfigurationLine3(void)
 
 	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2, GPIO_PIN_RESET);	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2);
  800091a:	2200      	movs	r2, #0
- 800091c:	f44f 51c0 	mov.w	r1, #6144	; 0x1800
+ 800091c:	f44f 4140 	mov.w	r1, #49152	; 0xc000
  8000920:	4807      	ldr	r0, [pc, #28]	; (8000940 <ConfigurationLine3+0x7c>)
  8000922:	f001 f933 	bl	8001b8c <HAL_GPIO_WritePin>
 	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_3, GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
@@ -964,7 +964,7 @@ static void ConfigurationLine4(void)
  8000964:	683b      	ldr	r3, [r7, #0]
 
   GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2 | IO_KEY_3 | IO_KEY_4;
- 8000966:	f44f 43f0 	mov.w	r3, #30720	; 0x7800
+ 8000966:	f44f 4370 	mov.w	r3, #61440	; 0xf000
  800096a:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  800096c:	2302      	movs	r3, #2
@@ -979,7 +979,7 @@ static void ConfigurationLine4(void)
  800097a:	f000 ff55 	bl	8001828 <HAL_GPIO_Init>
 
   GPIO_InitStructure.Pin = IO_KEY_5;
- 800097e:	f44f 4300 	mov.w	r3, #32768	; 0x8000
+ 800097e:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8000982:	607b      	str	r3, [r7, #4]
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
  8000984:	2302      	movs	r3, #2
@@ -998,12 +998,12 @@ static void ConfigurationLine4(void)
 
   HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3, GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3);
  800099a:	2200      	movs	r2, #0
- 800099c:	f44f 5160 	mov.w	r1, #14336	; 0x3800
+ 800099c:	f44f 4160 	mov.w	r1, #57344	; 0xe000
  80009a0:	4807      	ldr	r0, [pc, #28]	; (80009c0 <ConfigurationLine4+0x7c>)
  80009a2:	f001 f8f3 	bl	8001b8c <HAL_GPIO_WritePin>
   HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_4, GPIO_PIN_SET); 							//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_4);
  80009a6:	2201      	movs	r2, #1
- 80009a8:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 80009a8:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  80009ac:	4804      	ldr	r0, [pc, #16]	; (80009c0 <ConfigurationLine4+0x7c>)
  80009ae:	f001 f8ed 	bl	8001b8c <HAL_GPIO_WritePin>
 
@@ -1026,13 +1026,13 @@ static void GndScanStart(void)
  80009c8:	f7ff feda 	bl	8000780 <ConfigurationGnd>
 
 	if((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0))
- 80009cc:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 80009cc:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  80009d0:	4817      	ldr	r0, [pc, #92]	; (8000a30 <GndScanStart+0x6c>)
  80009d2:	f001 f8c3 	bl	8001b5c <HAL_GPIO_ReadPin>
  80009d6:	4603      	mov	r3, r0
  80009d8:	2b00      	cmp	r3, #0
  80009da:	d01f      	beq.n	8000a1c <GndScanStart+0x58>
- 80009dc:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 80009dc:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  80009e0:	4813      	ldr	r0, [pc, #76]	; (8000a30 <GndScanStart+0x6c>)
  80009e2:	f001 f8bb 	bl	8001b5c <HAL_GPIO_ReadPin>
  80009e6:	4603      	mov	r3, r0
@@ -1044,13 +1044,13 @@ static void GndScanStart(void)
  80009f6:	4603      	mov	r3, r0
  80009f8:	2b00      	cmp	r3, #0
  80009fa:	d00f      	beq.n	8000a1c <GndScanStart+0x58>
- 80009fc:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 80009fc:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000a00:	480b      	ldr	r0, [pc, #44]	; (8000a30 <GndScanStart+0x6c>)
  8000a02:	f001 f8ab 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a06:	4603      	mov	r3, r0
  8000a08:	2b00      	cmp	r3, #0
  8000a0a:	d007      	beq.n	8000a1c <GndScanStart+0x58>
- 8000a0c:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000a0c:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000a10:	4807      	ldr	r0, [pc, #28]	; (8000a30 <GndScanStart+0x6c>)
  8000a12:	f001 f8a3 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a16:	4603      	mov	r3, r0
@@ -1087,13 +1087,13 @@ static uint32_t GndScanDetection(void)
 	uint32_t ReValue;
 
 	if((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0))
- 8000a3e:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 8000a3e:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  8000a42:	4835      	ldr	r0, [pc, #212]	; (8000b18 <GndScanDetection+0xe0>)
  8000a44:	f001 f88a 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a48:	4603      	mov	r3, r0
  8000a4a:	2b00      	cmp	r3, #0
  8000a4c:	d01f      	beq.n	8000a8e <GndScanDetection+0x56>
- 8000a4e:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000a4e:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000a52:	4831      	ldr	r0, [pc, #196]	; (8000b18 <GndScanDetection+0xe0>)
  8000a54:	f001 f882 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a58:	4603      	mov	r3, r0
@@ -1105,13 +1105,13 @@ static uint32_t GndScanDetection(void)
  8000a68:	4603      	mov	r3, r0
  8000a6a:	2b00      	cmp	r3, #0
  8000a6c:	d00f      	beq.n	8000a8e <GndScanDetection+0x56>
- 8000a6e:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000a6e:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000a72:	4829      	ldr	r0, [pc, #164]	; (8000b18 <GndScanDetection+0xe0>)
  8000a74:	f001 f872 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a78:	4603      	mov	r3, r0
  8000a7a:	2b00      	cmp	r3, #0
  8000a7c:	d007      	beq.n	8000a8e <GndScanDetection+0x56>
- 8000a7e:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000a7e:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000a82:	4825      	ldr	r0, [pc, #148]	; (8000b18 <GndScanDetection+0xe0>)
  8000a84:	f001 f86a 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a88:	4603      	mov	r3, r0
@@ -1119,28 +1119,28 @@ static uint32_t GndScanDetection(void)
  8000a8c:	d139      	bne.n	8000b02 <GndScanDetection+0xca>
 	{
 		if(GET_IO_KEY_1 == 0)
- 8000a8e:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 8000a8e:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  8000a92:	4821      	ldr	r0, [pc, #132]	; (8000b18 <GndScanDetection+0xe0>)
  8000a94:	f001 f862 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000a98:	4603      	mov	r3, r0
  8000a9a:	2b00      	cmp	r3, #0
  8000a9c:	d102      	bne.n	8000aa4 <GndScanDetection+0x6c>
 		{
-			ReValue = KEY_VALUE_UP;	
- 8000a9e:	2301      	movs	r3, #1
+			ReValue = KEY_VALUE_REVERSED_LEFT; //KEY_VALUE_LEFT;
+ 8000a9e:	2305      	movs	r3, #5
  8000aa0:	607b      	str	r3, [r7, #4]
  8000aa2:	e02a      	b.n	8000afa <GndScanDetection+0xc2>
 		}
 		else if((GET_IO_KEY_2 == 0))
- 8000aa4:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000aa4:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000aa8:	481b      	ldr	r0, [pc, #108]	; (8000b18 <GndScanDetection+0xe0>)
  8000aaa:	f001 f857 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000aae:	4603      	mov	r3, r0
  8000ab0:	2b00      	cmp	r3, #0
  8000ab2:	d102      	bne.n	8000aba <GndScanDetection+0x82>
 		{
-			ReValue = KEY_VALUE_DOWN;
- 8000ab4:	2302      	movs	r3, #2
+			ReValue = KEY_VALUE_REVERSED_UP; //KEY_VALUE_UP;
+ 8000ab4:	2304      	movs	r3, #4
  8000ab6:	607b      	str	r3, [r7, #4]
  8000ab8:	e01f      	b.n	8000afa <GndScanDetection+0xc2>
 		}
@@ -1152,34 +1152,34 @@ static uint32_t GndScanDetection(void)
  8000ac6:	2b00      	cmp	r3, #0
  8000ac8:	d102      	bne.n	8000ad0 <GndScanDetection+0x98>
 		{
-			ReValue = KEY_VALUE_LEFT;
+			ReValue = KEY_VALUE_PRESS;
  8000aca:	2303      	movs	r3, #3
  8000acc:	607b      	str	r3, [r7, #4]
  8000ace:	e014      	b.n	8000afa <GndScanDetection+0xc2>
 		}
 		else if((GET_IO_KEY_4 == 0))
- 8000ad0:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000ad0:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000ad4:	4810      	ldr	r0, [pc, #64]	; (8000b18 <GndScanDetection+0xe0>)
  8000ad6:	f001 f841 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000ada:	4603      	mov	r3, r0
  8000adc:	2b00      	cmp	r3, #0
  8000ade:	d102      	bne.n	8000ae6 <GndScanDetection+0xae>
 		{
-			ReValue = KEY_VALUE_RIGHT;
- 8000ae0:	2304      	movs	r3, #4
+			ReValue = KEY_VALUE_REVERSED_DOWN; //KEY_VALUE_DOWN;
+ 8000ae0:	2302      	movs	r3, #2
  8000ae2:	607b      	str	r3, [r7, #4]
  8000ae4:	e009      	b.n	8000afa <GndScanDetection+0xc2>
 		}
 		else if((GET_IO_KEY_5 == 0))
- 8000ae6:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000ae6:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000aea:	480b      	ldr	r0, [pc, #44]	; (8000b18 <GndScanDetection+0xe0>)
  8000aec:	f001 f836 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000af0:	4603      	mov	r3, r0
  8000af2:	2b00      	cmp	r3, #0
  8000af4:	d101      	bne.n	8000afa <GndScanDetection+0xc2>
 		{
-			ReValue = KEY_VALUE_PRESS;
- 8000af6:	2305      	movs	r3, #5
+			ReValue = KEY_VALUE_REVERSED_RIGHT; //KEY_VALUE_RIGHT;
+ 8000af6:	2301      	movs	r3, #1
  8000af8:	607b      	str	r3, [r7, #4]
 		}	
 
@@ -1218,13 +1218,13 @@ static void GndScanOver(void)
  8000b20:	b580      	push	{r7, lr}
  8000b22:	af00      	add	r7, sp, #0
 	if(((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0)))
- 8000b24:	f44f 6100 	mov.w	r1, #2048	; 0x800
+ 8000b24:	f44f 4100 	mov.w	r1, #32768	; 0x8000
  8000b28:	4817      	ldr	r0, [pc, #92]	; (8000b88 <GndScanOver+0x68>)
  8000b2a:	f001 f817 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000b2e:	4603      	mov	r3, r0
  8000b30:	2b00      	cmp	r3, #0
  8000b32:	d01f      	beq.n	8000b74 <GndScanOver+0x54>
- 8000b34:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000b34:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000b38:	4813      	ldr	r0, [pc, #76]	; (8000b88 <GndScanOver+0x68>)
  8000b3a:	f001 f80f 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000b3e:	4603      	mov	r3, r0
@@ -1236,13 +1236,13 @@ static void GndScanOver(void)
  8000b4e:	4603      	mov	r3, r0
  8000b50:	2b00      	cmp	r3, #0
  8000b52:	d00f      	beq.n	8000b74 <GndScanOver+0x54>
- 8000b54:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000b54:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000b58:	480b      	ldr	r0, [pc, #44]	; (8000b88 <GndScanOver+0x68>)
  8000b5a:	f000 ffff 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000b5e:	4603      	mov	r3, r0
  8000b60:	2b00      	cmp	r3, #0
  8000b62:	d007      	beq.n	8000b74 <GndScanOver+0x54>
- 8000b64:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000b64:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000b68:	4807      	ldr	r0, [pc, #28]	; (8000b88 <GndScanOver+0x68>)
  8000b6a:	f000 fff7 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000b6e:	4603      	mov	r3, r0
@@ -1279,7 +1279,7 @@ static void Line1ScanStart(void)
  8000b94:	f7ff fe1c 	bl	80007d0 <ConfigurationLine1>
 
 	if(((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1)))
- 8000b98:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000b98:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000b9c:	4823      	ldr	r0, [pc, #140]	; (8000c2c <Line1ScanStart+0x9c>)
  8000b9e:	f000 ffdd 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000ba2:	4603      	mov	r3, r0
@@ -1291,13 +1291,13 @@ static void Line1ScanStart(void)
  8000bb2:	4603      	mov	r3, r0
  8000bb4:	2b01      	cmp	r3, #1
  8000bb6:	d00f      	beq.n	8000bd8 <Line1ScanStart+0x48>
- 8000bb8:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000bb8:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000bbc:	481b      	ldr	r0, [pc, #108]	; (8000c2c <Line1ScanStart+0x9c>)
  8000bbe:	f000 ffcd 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000bc2:	4603      	mov	r3, r0
  8000bc4:	2b01      	cmp	r3, #1
  8000bc6:	d007      	beq.n	8000bd8 <Line1ScanStart+0x48>
- 8000bc8:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000bc8:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000bcc:	4817      	ldr	r0, [pc, #92]	; (8000c2c <Line1ScanStart+0x9c>)
  8000bce:	f000 ffc5 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000bd2:	4603      	mov	r3, r0
@@ -1316,7 +1316,7 @@ static void Line1ScanStart(void)
 }
  8000bde:	e022      	b.n	8000c26 <Line1ScanStart+0x96>
 	else if((!((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))))
- 8000be0:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000be0:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000be4:	4811      	ldr	r0, [pc, #68]	; (8000c2c <Line1ScanStart+0x9c>)
  8000be6:	f000 ffb9 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000bea:	4603      	mov	r3, r0
@@ -1328,13 +1328,13 @@ static void Line1ScanStart(void)
  8000bfa:	4603      	mov	r3, r0
  8000bfc:	2b01      	cmp	r3, #1
  8000bfe:	d012      	beq.n	8000c26 <Line1ScanStart+0x96>
- 8000c00:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000c00:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000c04:	4809      	ldr	r0, [pc, #36]	; (8000c2c <Line1ScanStart+0x9c>)
  8000c06:	f000 ffa9 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c0a:	4603      	mov	r3, r0
  8000c0c:	2b01      	cmp	r3, #1
  8000c0e:	d00a      	beq.n	8000c26 <Line1ScanStart+0x96>
- 8000c10:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000c10:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000c14:	4805      	ldr	r0, [pc, #20]	; (8000c2c <Line1ScanStart+0x9c>)
  8000c16:	f000 ffa1 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c1a:	4603      	mov	r3, r0
@@ -1361,7 +1361,7 @@ static uint32_t Line1ScanDetection(void)
 	uint32_t ReValue;
 
 	if(((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1)))
- 8000c3a:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000c3a:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000c3e:	482b      	ldr	r0, [pc, #172]	; (8000cec <Line1ScanDetection+0xb8>)
  8000c40:	f000 ff8c 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c44:	4603      	mov	r3, r0
@@ -1373,13 +1373,13 @@ static uint32_t Line1ScanDetection(void)
  8000c54:	4603      	mov	r3, r0
  8000c56:	2b01      	cmp	r3, #1
  8000c58:	d00f      	beq.n	8000c7a <Line1ScanDetection+0x46>
- 8000c5a:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000c5a:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000c5e:	4823      	ldr	r0, [pc, #140]	; (8000cec <Line1ScanDetection+0xb8>)
  8000c60:	f000 ff7c 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c64:	4603      	mov	r3, r0
  8000c66:	2b01      	cmp	r3, #1
  8000c68:	d007      	beq.n	8000c7a <Line1ScanDetection+0x46>
- 8000c6a:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000c6a:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000c6e:	481f      	ldr	r0, [pc, #124]	; (8000cec <Line1ScanDetection+0xb8>)
  8000c70:	f000 ff74 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c74:	4603      	mov	r3, r0
@@ -1387,7 +1387,7 @@ static uint32_t Line1ScanDetection(void)
  8000c78:	d12e      	bne.n	8000cd8 <Line1ScanDetection+0xa4>
 	{
 		if(GET_IO_KEY_2 == 1)
- 8000c7a:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000c7a:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000c7e:	481b      	ldr	r0, [pc, #108]	; (8000cec <Line1ScanDetection+0xb8>)
  8000c80:	f000 ff6c 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000c84:	4603      	mov	r3, r0
@@ -1413,7 +1413,7 @@ static uint32_t Line1ScanDetection(void)
  8000ca4:	e014      	b.n	8000cd0 <Line1ScanDetection+0x9c>
 		}
 		else if(GET_IO_KEY_4 == 1)
- 8000ca6:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000ca6:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000caa:	4810      	ldr	r0, [pc, #64]	; (8000cec <Line1ScanDetection+0xb8>)
  8000cac:	f000 ff56 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000cb0:	4603      	mov	r3, r0
@@ -1426,7 +1426,7 @@ static uint32_t Line1ScanDetection(void)
  8000cba:	e009      	b.n	8000cd0 <Line1ScanDetection+0x9c>
 		}
 		else if(GET_IO_KEY_5 == 1)
- 8000cbc:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000cbc:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000cc0:	480a      	ldr	r0, [pc, #40]	; (8000cec <Line1ScanDetection+0xb8>)
  8000cc2:	f000 ff4b 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000cc6:	4603      	mov	r3, r0
@@ -1472,7 +1472,7 @@ static void Line1ScanOver(void)
  8000cf4:	b580      	push	{r7, lr}
  8000cf6:	af00      	add	r7, sp, #0
 	if((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
- 8000cf8:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000cf8:	f44f 4180 	mov.w	r1, #16384	; 0x4000
  8000cfc:	4813      	ldr	r0, [pc, #76]	; (8000d4c <Line1ScanOver+0x58>)
  8000cfe:	f000 ff2d 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000d02:	4603      	mov	r3, r0
@@ -1484,13 +1484,13 @@ static void Line1ScanOver(void)
  8000d12:	4603      	mov	r3, r0
  8000d14:	2b01      	cmp	r3, #1
  8000d16:	d00f      	beq.n	8000d38 <Line1ScanOver+0x44>
- 8000d18:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000d18:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000d1c:	480b      	ldr	r0, [pc, #44]	; (8000d4c <Line1ScanOver+0x58>)
  8000d1e:	f000 ff1d 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000d22:	4603      	mov	r3, r0
  8000d24:	2b01      	cmp	r3, #1
  8000d26:	d007      	beq.n	8000d38 <Line1ScanOver+0x44>
- 8000d28:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000d28:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000d2c:	4807      	ldr	r0, [pc, #28]	; (8000d4c <Line1ScanOver+0x58>)
  8000d2e:	f000 ff15 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000d32:	4603      	mov	r3, r0
@@ -1533,13 +1533,13 @@ static void Line2ScanStart(void)
  8000d66:	4603      	mov	r3, r0
  8000d68:	2b01      	cmp	r3, #1
  8000d6a:	d00f      	beq.n	8000d8c <Line2ScanStart+0x38>
- 8000d6c:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000d6c:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000d70:	480b      	ldr	r0, [pc, #44]	; (8000da0 <Line2ScanStart+0x4c>)
  8000d72:	f000 fef3 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000d76:	4603      	mov	r3, r0
  8000d78:	2b01      	cmp	r3, #1
  8000d7a:	d007      	beq.n	8000d8c <Line2ScanStart+0x38>
- 8000d7c:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000d7c:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000d80:	4807      	ldr	r0, [pc, #28]	; (8000da0 <Line2ScanStart+0x4c>)
  8000d82:	f000 feeb 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000d86:	4603      	mov	r3, r0
@@ -1582,13 +1582,13 @@ static uint32_t Line2ScanDetection(void)
  8000db8:	4603      	mov	r3, r0
  8000dba:	2b01      	cmp	r3, #1
  8000dbc:	d00f      	beq.n	8000dde <Line2ScanDetection+0x36>
- 8000dbe:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000dbe:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000dc2:	481e      	ldr	r0, [pc, #120]	; (8000e3c <Line2ScanDetection+0x94>)
  8000dc4:	f000 feca 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000dc8:	4603      	mov	r3, r0
  8000dca:	2b01      	cmp	r3, #1
  8000dcc:	d007      	beq.n	8000dde <Line2ScanDetection+0x36>
- 8000dce:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000dce:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000dd2:	481a      	ldr	r0, [pc, #104]	; (8000e3c <Line2ScanDetection+0x94>)
  8000dd4:	f000 fec2 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000dd8:	4603      	mov	r3, r0
@@ -1609,7 +1609,7 @@ static uint32_t Line2ScanDetection(void)
  8000df2:	e014      	b.n	8000e1e <Line2ScanDetection+0x76>
 		}
 		else if(GET_IO_KEY_4 == 1)
- 8000df4:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000df4:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000df8:	4810      	ldr	r0, [pc, #64]	; (8000e3c <Line2ScanDetection+0x94>)
  8000dfa:	f000 feaf 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000dfe:	4603      	mov	r3, r0
@@ -1622,7 +1622,7 @@ static uint32_t Line2ScanDetection(void)
  8000e08:	e009      	b.n	8000e1e <Line2ScanDetection+0x76>
 		}
 		else if(GET_IO_KEY_5 == 1)
- 8000e0a:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000e0a:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000e0e:	480b      	ldr	r0, [pc, #44]	; (8000e3c <Line2ScanDetection+0x94>)
  8000e10:	f000 fea4 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000e14:	4603      	mov	r3, r0
@@ -1675,13 +1675,13 @@ static void Line2ScanOver(void)
  8000e52:	4603      	mov	r3, r0
  8000e54:	2b01      	cmp	r3, #1
  8000e56:	d00f      	beq.n	8000e78 <Line2ScanOver+0x34>
- 8000e58:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000e58:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000e5c:	480b      	ldr	r0, [pc, #44]	; (8000e8c <Line2ScanOver+0x48>)
  8000e5e:	f000 fe7d 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000e62:	4603      	mov	r3, r0
  8000e64:	2b01      	cmp	r3, #1
  8000e66:	d007      	beq.n	8000e78 <Line2ScanOver+0x34>
- 8000e68:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000e68:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000e6c:	4807      	ldr	r0, [pc, #28]	; (8000e8c <Line2ScanOver+0x48>)
  8000e6e:	f000 fe75 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000e72:	4603      	mov	r3, r0
@@ -1718,13 +1718,13 @@ static void Line3ScanStart(void)
  8000e98:	f7ff fd14 	bl	80008c4 <ConfigurationLine3>
 
 	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
- 8000e9c:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000e9c:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000ea0:	480b      	ldr	r0, [pc, #44]	; (8000ed0 <Line3ScanStart+0x3c>)
  8000ea2:	f000 fe5b 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000ea6:	4603      	mov	r3, r0
  8000ea8:	2b01      	cmp	r3, #1
  8000eaa:	d007      	beq.n	8000ebc <Line3ScanStart+0x28>
- 8000eac:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000eac:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000eb0:	4807      	ldr	r0, [pc, #28]	; (8000ed0 <Line3ScanStart+0x3c>)
  8000eb2:	f000 fe53 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000eb6:	4603      	mov	r3, r0
@@ -1761,13 +1761,13 @@ static uint32_t Line3ScanDetection(void)
 	uint32_t ReValue;
 
 	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
- 8000ede:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000ede:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000ee2:	4818      	ldr	r0, [pc, #96]	; (8000f44 <Line3ScanDetection+0x6c>)
  8000ee4:	f000 fe3a 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000ee8:	4603      	mov	r3, r0
  8000eea:	2b01      	cmp	r3, #1
  8000eec:	d007      	beq.n	8000efe <Line3ScanDetection+0x26>
- 8000eee:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000eee:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000ef2:	4814      	ldr	r0, [pc, #80]	; (8000f44 <Line3ScanDetection+0x6c>)
  8000ef4:	f000 fe32 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000ef8:	4603      	mov	r3, r0
@@ -1775,7 +1775,7 @@ static uint32_t Line3ScanDetection(void)
  8000efc:	d118      	bne.n	8000f30 <Line3ScanDetection+0x58>
 	{
 		if(GET_IO_KEY_4 == 1)
- 8000efe:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000efe:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000f02:	4810      	ldr	r0, [pc, #64]	; (8000f44 <Line3ScanDetection+0x6c>)
  8000f04:	f000 fe2a 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000f08:	4603      	mov	r3, r0
@@ -1788,7 +1788,7 @@ static uint32_t Line3ScanDetection(void)
  8000f12:	e009      	b.n	8000f28 <Line3ScanDetection+0x50>
 		}
 		else if(GET_IO_KEY_5 == 1)
- 8000f14:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000f14:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000f18:	480a      	ldr	r0, [pc, #40]	; (8000f44 <Line3ScanDetection+0x6c>)
  8000f1a:	f000 fe1f 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000f1e:	4603      	mov	r3, r0
@@ -1834,13 +1834,13 @@ static void Line3ScanOver(void)
  8000f4c:	b580      	push	{r7, lr}
  8000f4e:	af00      	add	r7, sp, #0
 	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
- 8000f50:	f44f 4180 	mov.w	r1, #16384	; 0x4000
+ 8000f50:	f44f 5180 	mov.w	r1, #4096	; 0x1000
  8000f54:	480b      	ldr	r0, [pc, #44]	; (8000f84 <Line3ScanOver+0x38>)
  8000f56:	f000 fe01 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000f5a:	4603      	mov	r3, r0
  8000f5c:	2b01      	cmp	r3, #1
  8000f5e:	d007      	beq.n	8000f70 <Line3ScanOver+0x24>
- 8000f60:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000f60:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000f64:	4807      	ldr	r0, [pc, #28]	; (8000f84 <Line3ScanOver+0x38>)
  8000f66:	f000 fdf9 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000f6a:	4603      	mov	r3, r0
@@ -1877,7 +1877,7 @@ static void Line4ScanStart(void)
  8000f90:	f7ff fcd8 	bl	8000944 <ConfigurationLine4>
 
 	if(GET_IO_KEY_5 == 1)
- 8000f94:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000f94:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000f98:	4807      	ldr	r0, [pc, #28]	; (8000fb8 <Line4ScanStart+0x2c>)
  8000f9a:	f000 fddf 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000f9e:	4603      	mov	r3, r0
@@ -1916,7 +1916,7 @@ static uint32_t Line4ScanDetection(void)
 	uint32_t ReValue;
 
 	if(GET_IO_KEY_5 == 1)
- 8000fc6:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8000fc6:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8000fca:	480b      	ldr	r0, [pc, #44]	; (8000ff8 <Line4ScanDetection+0x38>)
  8000fcc:	f000 fdc6 	bl	8001b5c <HAL_GPIO_ReadPin>
  8000fd0:	4603      	mov	r3, r0
@@ -1962,7 +1962,7 @@ static void Line4ScanOver(void)
  8001000:	b580      	push	{r7, lr}
  8001002:	af00      	add	r7, sp, #0
 	if(GET_IO_KEY_5 == 1)
- 8001004:	f44f 4100 	mov.w	r1, #32768	; 0x8000
+ 8001004:	f44f 6100 	mov.w	r1, #2048	; 0x800
  8001008:	4807      	ldr	r0, [pc, #28]	; (8001028 <Line4ScanOver+0x28>)
  800100a:	f000 fda7 	bl	8001b5c <HAL_GPIO_ReadPin>
  800100e:	4603      	mov	r3, r0
