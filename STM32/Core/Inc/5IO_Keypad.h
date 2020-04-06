@@ -28,21 +28,40 @@
 #define KEY_VALUE_REVERSED_LEFT KEY_VALUE_RIGHT
 #define KEY_VALUE_REVERSED_RIGHT KEY_VALUE_LEFT
 
-#define IO_KEY_GPIO GPIOB
-//#define RCC_KEY_GPIO RCC_APB2Periph_GPIOC RCC->APB2PERIPH_BASE
-#define IO_KEY_1 GPIO_PIN_15
-#define IO_KEY_2 GPIO_PIN_14
-#define IO_KEY_3 GPIO_PIN_13
-#define IO_KEY_4 GPIO_PIN_12
-#define IO_KEY_5 GPIO_PIN_11
 
-#define GET_IO_KEY_1 HAL_GPIO_ReadPin(IO_KEY_GPIO, IO_KEY_1)
-#define GET_IO_KEY_2 HAL_GPIO_ReadPin(IO_KEY_GPIO, IO_KEY_2)
-#define GET_IO_KEY_3 HAL_GPIO_ReadPin(IO_KEY_GPIO, IO_KEY_3)
-#define GET_IO_KEY_4 HAL_GPIO_ReadPin(IO_KEY_GPIO, IO_KEY_4)
-#define GET_IO_KEY_5 HAL_GPIO_ReadPin(IO_KEY_GPIO, IO_KEY_5)
+// Left keypad
+#define LEFT_IO_KEY_GPIO GPIOB
+#define LEFT_IO_KEY_1 GPIO_PIN_15
+#define LEFT_IO_KEY_2 GPIO_PIN_14
+#define LEFT_IO_KEY_3 GPIO_PIN_13
+#define LEFT_IO_KEY_4 GPIO_PIN_12
+#define LEFT_IO_KEY_5 GPIO_PIN_11
 
-extern uint32_t KeypadScan(void);
-extern void KeypadScanTest(void);
+
+// Right keypad
+#define RIGHT_IO_KEY_GPIO GPIOD
+#define RIGHT_IO_KEY_1 GPIO_PIN_6
+#define RIGHT_IO_KEY_2 GPIO_PIN_3
+#define RIGHT_IO_KEY_3 GPIO_PIN_2
+#define RIGHT_IO_KEY_4 GPIO_PIN_1
+#define RIGHT_IO_KEY_5 GPIO_PIN_0
+
+
+// Test
+#define IO_KEY_GPIO(side) 	(side == 'L' ? LEFT_IO_KEY_GPIO : RIGHT_IO_KEY_GPIO)
+#define IO_KEY_1(side) 		(side == 'L' ? LEFT_IO_KEY_1 : RIGHT_IO_KEY_1)
+#define IO_KEY_2(side) 		(side == 'L' ? LEFT_IO_KEY_2 : RIGHT_IO_KEY_2)
+#define IO_KEY_3(side) 		(side == 'L' ? LEFT_IO_KEY_3 : RIGHT_IO_KEY_3)
+#define IO_KEY_4(side) 		(side == 'L' ? LEFT_IO_KEY_4 : RIGHT_IO_KEY_4)
+#define IO_KEY_5(side) 		(side == 'L' ? LEFT_IO_KEY_5 : RIGHT_IO_KEY_5)
+
+#define GET_IO_KEY_1(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_1(side))
+#define GET_IO_KEY_2(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_2(side))
+#define GET_IO_KEY_3(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_3(side))
+#define GET_IO_KEY_4(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_4(side))
+#define GET_IO_KEY_5(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_5(side))
+
+extern uint32_t KeypadScan(char side);
+extern void KeypadScanTest(char side);
 
 #endif

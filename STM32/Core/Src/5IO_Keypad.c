@@ -25,67 +25,67 @@ typedef enum{
 
 static Key_State CurrentKeyState = GND_START;
 
-static void ConfigurationGnd(void);
-static void ConfigurationLine1(void);
-static void ConfigurationLine2(void);
-static void ConfigurationLine3(void);
-static void ConfigurationLine4(void);
+static void ConfigurationGnd(char side);
+static void ConfigurationLine1(char side);
+static void ConfigurationLine2(char side);
+static void ConfigurationLine3(char side);
+static void ConfigurationLine4(char side);
 
-static void GndScanStart(void);
-static uint32_t GndScanDetection(void);
-static void GndScanOver(void);
+static void GndScanStart(char side);
+static uint32_t GndScanDetection(char side);
+static void GndScanOver(char side);
 
-static void Line1ScanStart(void);
-static uint32_t Line1ScanDetection(void);
-static void Line1ScanOver(void);
+static void Line1ScanStart(char side);
+static uint32_t Line1ScanDetection(char side);
+static void Line1ScanOver(char side);
 
-static void Line2ScanStart(void);
-static uint32_t Line2ScanDetection(void);
-static void Line2ScanOver(void);
+static void Line2ScanStart(char side);
+static uint32_t Line2ScanDetection(char side);
+static void Line2ScanOver(char side);
 
-static void Line3ScanStart(void);
-static uint32_t Line3ScanDetection(void);
-static void Line3ScanOver(void);
+static void Line3ScanStart(char side);
+static uint32_t Line3ScanDetection(char side);
+static void Line3ScanOver(char side);
 
-static void Line4ScanStart(void);
-static uint32_t Line4ScanDetection(void);
-static void Line4ScanOver(void);
+static void Line4ScanStart(char side);
+static uint32_t Line4ScanDetection(char side);
+static void Line4ScanOver(char side);
 
-uint32_t KeypadScan(void)
+uint32_t KeypadScan(char side)
 {
 	uint32_t ReValue;
 
 	switch(CurrentKeyState)
 	{
-		case GND_START: ReValue = KEY_VALUE_NULL; GndScanStart(); break; 
-		case GND_DETECTION: ReValue = GndScanDetection(); break;
-		case GND_OVER: ReValue = KEY_VALUE_NULL; GndScanOver(); break; 
+		case GND_START: ReValue = KEY_VALUE_NULL; GndScanStart(side); break;
+		case GND_DETECTION: ReValue = GndScanDetection(side); break;
+		case GND_OVER: ReValue = KEY_VALUE_NULL; GndScanOver(side); break;
 
-		case LINE1_START: ReValue = KEY_VALUE_NULL; Line1ScanStart(); break; 
-		case LINE1_DETECTION: ReValue = Line1ScanDetection(); break;
-		case LINE1_OVER: ReValue = KEY_VALUE_NULL; Line1ScanOver(); break;
+		case LINE1_START: ReValue = KEY_VALUE_NULL; Line1ScanStart(side); break;
+		case LINE1_DETECTION: ReValue = Line1ScanDetection(side); break;
+		case LINE1_OVER: ReValue = KEY_VALUE_NULL; Line1ScanOver(side); break;
 		
-		case LINE2_START: ReValue = KEY_VALUE_NULL; Line2ScanStart(); break; 
-		case LINE2_DETECTION: ReValue = Line2ScanDetection(); break;
-		case LINE2_OVER: ReValue = KEY_VALUE_NULL; Line2ScanOver(); break;
+		case LINE2_START: ReValue = KEY_VALUE_NULL; Line2ScanStart(side); break;
+		case LINE2_DETECTION: ReValue = Line2ScanDetection(side); break;
+		case LINE2_OVER: ReValue = KEY_VALUE_NULL; Line2ScanOver(side); break;
 		
-		case LINE3_START: ReValue = KEY_VALUE_NULL; Line3ScanStart(); break; 
-		case LINE3_DETECTION: ReValue = Line3ScanDetection(); break;
-		case LINE3_OVER: ReValue = KEY_VALUE_NULL; Line3ScanOver(); break;
+		case LINE3_START: ReValue = KEY_VALUE_NULL; Line3ScanStart(side); break;
+		case LINE3_DETECTION: ReValue = Line3ScanDetection(side); break;
+		case LINE3_OVER: ReValue = KEY_VALUE_NULL; Line3ScanOver(side); break;
 
-		case LINE4_START: ReValue = KEY_VALUE_NULL; Line4ScanStart(); break; 
-		case LINE4_DETECTION: ReValue = Line4ScanDetection(); break;
-		case LINE4_OVER: ReValue = KEY_VALUE_NULL; Line4ScanOver(); break;		  
+		case LINE4_START: ReValue = KEY_VALUE_NULL; Line4ScanStart(side); break;
+		case LINE4_DETECTION: ReValue = Line4ScanDetection(side); break;
+		case LINE4_OVER: ReValue = KEY_VALUE_NULL; Line4ScanOver(side); break;
 	}
 
 	return ReValue;
 }
 
-void KeypadScanTest(void)
+void KeypadScanTest(char side)
 {
 	uint32_t TempKeyValue;
 
-	TempKeyValue = KeypadScan();
+	TempKeyValue = KeypadScan(side);
 
 	if(TempKeyValue != 0)
 	{
@@ -112,115 +112,122 @@ void KeypadScanTest(void)
 	}
 }
 
-static void ConfigurationGnd(void)
+static void ConfigurationGnd(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE();// RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
 
-  /* Configure PC.0, PC.01, PC.02, PC.03, PC.04 */
-  GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2 | IO_KEY_3 | IO_KEY_4 | IO_KEY_5;
+  GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
 }
 
-static void ConfigurationLine1(void)
+static void ConfigurationLine1(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
 	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-  GPIO_InitStructure.Pin = IO_KEY_1;
+
+  GPIO_InitStructure.Pin = IO_KEY_1(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  GPIO_InitStructure.Pin = IO_KEY_2 | IO_KEY_3 | IO_KEY_4 | IO_KEY_5;
+  GPIO_InitStructure.Pin = IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1, GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
 }
 
-static void ConfigurationLine2(void)
+static void ConfigurationLine2(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
 	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-  GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2;
+
+  GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  GPIO_InitStructure.Pin = IO_KEY_3 | IO_KEY_4 | IO_KEY_5;
+  GPIO_InitStructure.Pin = IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_2, GPIO_PIN_SET); 	//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_2);
-	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1, GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_2(side), GPIO_PIN_SET); 	//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_2);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
 }
 
-static void ConfigurationLine3(void)
+static void ConfigurationLine3(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
 	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-  GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2 | IO_KEY_3;
+
+  GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  GPIO_InitStructure.Pin = IO_KEY_4 | IO_KEY_5;
+  GPIO_InitStructure.Pin = IO_KEY_4(side) | IO_KEY_5(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2, GPIO_PIN_RESET);	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2);
-	HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_3, GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side), GPIO_PIN_RESET);	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
 }
 
-static void ConfigurationLine4(void)
+static void ConfigurationLine4(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
 	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
-  GPIO_InitStructure.Pin = IO_KEY_1 | IO_KEY_2 | IO_KEY_3 | IO_KEY_4;
+
+  GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  GPIO_InitStructure.Pin = IO_KEY_5;
+  GPIO_InitStructure.Pin = IO_KEY_5(side);
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3, GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3);
-  HAL_GPIO_WritePin(IO_KEY_GPIO, IO_KEY_4, GPIO_PIN_SET); 							//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_4);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET); 							//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_4);
 
 }
 
-static void GndScanStart(void)
+static void GndScanStart(char side)
 {
-	ConfigurationGnd();
+	ConfigurationGnd(side);
 
-	if((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0))
+	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
 		CurrentKeyState = GND_DETECTION;
 	}
@@ -230,31 +237,31 @@ static void GndScanStart(void)
 	}
 }
 
-static uint32_t GndScanDetection(void)
+static uint32_t GndScanDetection(char side)
 {
 	uint32_t ReValue;
 
-	if((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0))
+	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
-		if(GET_IO_KEY_1 == 0)
+		if(GET_IO_KEY_1(side) == 0)
 		{
-			ReValue = KEY_VALUE_REVERSED_LEFT; //KEY_VALUE_LEFT;
+			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_LEFT : KEY_VALUE_LEFT);
 		}
-		else if((GET_IO_KEY_2 == 0))
+		else if((GET_IO_KEY_2(side) == 0))
 		{
-			ReValue = KEY_VALUE_REVERSED_UP; //KEY_VALUE_UP;
+			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_UP : KEY_VALUE_UP);
 		}
-		else if((GET_IO_KEY_3 == 0))
+		else if((GET_IO_KEY_3(side) == 0))
 		{
 			ReValue = KEY_VALUE_PRESS;
 		}
-		else if((GET_IO_KEY_4 == 0))
+		else if((GET_IO_KEY_4(side) == 0))
 		{
-			ReValue = KEY_VALUE_REVERSED_DOWN; //KEY_VALUE_DOWN;
+			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_DOWN : KEY_VALUE_DOWN);
 		}
-		else if((GET_IO_KEY_5 == 0))
+		else if((GET_IO_KEY_5(side) == 0))
 		{
-			ReValue = KEY_VALUE_REVERSED_RIGHT; //KEY_VALUE_RIGHT;
+			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
 		}	
 
 		CurrentKeyState = GND_OVER;
@@ -268,9 +275,9 @@ static uint32_t GndScanDetection(void)
 	return ReValue;
 }	
 	
-static void GndScanOver(void)
+static void GndScanOver(char side)
 {
-	if(((GET_IO_KEY_1 == 0)||(GET_IO_KEY_2 == 0)||(GET_IO_KEY_3 == 0)||(GET_IO_KEY_4 == 0)||(GET_IO_KEY_5 == 0)))
+	if(((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0)))
 	{
 		CurrentKeyState = GND_OVER;	
 	}
@@ -280,39 +287,39 @@ static void GndScanOver(void)
 	}
 }
 /* Scan line 1 */
-static void Line1ScanStart(void)
+static void Line1ScanStart(char side)
 {
-	ConfigurationLine1();
+	ConfigurationLine1(side);
 
-	if(((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1)))
+	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
 		CurrentKeyState = LINE1_DETECTION;	
 	}
-	else if((!((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))))
+	else if((!((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))))
 	{
 		CurrentKeyState = LINE2_START;
 	}		
 }
 
-static uint32_t Line1ScanDetection(void)
+static uint32_t Line1ScanDetection(char side)
 {
 	uint32_t ReValue;
 
-	if(((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1)))
+	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
-		if(GET_IO_KEY_2 == 1)
+		if(GET_IO_KEY_2(side) == 1)
 		{
 			ReValue = KEY_VALUE_ONE;	
 		}
-		else if(GET_IO_KEY_3 == 1)
+		else if(GET_IO_KEY_3(side) == 1)
 		{
 			ReValue = KEY_VALUE_TWO;
 		}
-		else if(GET_IO_KEY_4 == 1)
+		else if(GET_IO_KEY_4(side) == 1)
 		{
 			ReValue = KEY_VALUE_THREE;
 		}
-		else if(GET_IO_KEY_5 == 1)
+		else if(GET_IO_KEY_5(side) == 1)
 		{
 			ReValue = KEY_VALUE_FOUR;
 		}
@@ -328,9 +335,9 @@ static uint32_t Line1ScanDetection(void)
 	return ReValue;
 }
 
-static void Line1ScanOver(void)
+static void Line1ScanOver(char side)
 {
-	if((GET_IO_KEY_2 == 1)||(GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
 		CurrentKeyState = LINE1_OVER;	
 	}
@@ -340,11 +347,11 @@ static void Line1ScanOver(void)
 	}
 }
 /* Scan line 2 */
-static void Line2ScanStart(void)
+static void Line2ScanStart(char side)
 {
-	ConfigurationLine2();
+	ConfigurationLine2(side);
 
-	if((GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
 		CurrentKeyState = LINE2_DETECTION;	
 	}
@@ -354,21 +361,21 @@ static void Line2ScanStart(void)
 	}		
 }
 
-static uint32_t Line2ScanDetection(void)
+static uint32_t Line2ScanDetection(char side)
 {
 	uint32_t ReValue;
 
-	if((GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		if(GET_IO_KEY_3 == 1)
+		if(GET_IO_KEY_3(side) == 1)
 		{
 			ReValue = KEY_VALUE_FIVE;	
 		}
-		else if(GET_IO_KEY_4 == 1)
+		else if(GET_IO_KEY_4(side) == 1)
 		{
 			ReValue = KEY_VALUE_SIX;
 		}
-		else if(GET_IO_KEY_5 == 1)
+		else if(GET_IO_KEY_5(side) == 1)
 		{
 			ReValue = KEY_VALUE_SEVEN;
 		}
@@ -384,9 +391,9 @@ static uint32_t Line2ScanDetection(void)
 	return ReValue;
 }
 
-static void Line2ScanOver(void)
+static void Line2ScanOver(char side)
 {
-	if((GET_IO_KEY_3 == 1)||(GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
 		CurrentKeyState = LINE2_OVER;	
 	}
@@ -396,11 +403,11 @@ static void Line2ScanOver(void)
 	}
 }
 /* Scan line 3 */
-static void Line3ScanStart(void)
+static void Line3ScanStart(char side)
 {
-	ConfigurationLine3();
+	ConfigurationLine3(side);
 
-	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
 		CurrentKeyState = LINE3_DETECTION;	
 	}
@@ -410,17 +417,17 @@ static void Line3ScanStart(void)
 	}		
 }
 
-static uint32_t Line3ScanDetection(void)
+static uint32_t Line3ScanDetection(char side)
 {
 	uint32_t ReValue;
 
-	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		if(GET_IO_KEY_4 == 1)
+		if(GET_IO_KEY_4(side) == 1)
 		{
 			ReValue = KEY_VALUE_EIGHT;	
 		}
-		else if(GET_IO_KEY_5 == 1)
+		else if(GET_IO_KEY_5(side) == 1)
 		{
 			ReValue = KEY_VALUE_NINE;
 		}
@@ -436,9 +443,9 @@ static uint32_t Line3ScanDetection(void)
 	return ReValue;
 }
 
-static void Line3ScanOver(void)
+static void Line3ScanOver(char side)
 {
-	if((GET_IO_KEY_4 == 1)||(GET_IO_KEY_5 == 1))
+	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
 		CurrentKeyState = LINE3_OVER;	
 	}
@@ -448,11 +455,11 @@ static void Line3ScanOver(void)
 	}
 }
 /* Scan line 4 */
-static void Line4ScanStart(void)
+static void Line4ScanStart(char side)
 {
-	ConfigurationLine4();
+	ConfigurationLine4(side);
 
-	if(GET_IO_KEY_5 == 1)
+	if(GET_IO_KEY_5(side) == 1)
 	{
 		CurrentKeyState = LINE4_DETECTION;	
 	}
@@ -462,11 +469,11 @@ static void Line4ScanStart(void)
 	}		
 }
 
-static uint32_t Line4ScanDetection(void)
+static uint32_t Line4ScanDetection(char side)
 {
 	uint32_t ReValue;
 
-	if(GET_IO_KEY_5 == 1)
+	if(GET_IO_KEY_5(side) == 1)
 	{
 		ReValue = KEY_VALUE_TEN;	
 
@@ -481,9 +488,9 @@ static uint32_t Line4ScanDetection(void)
 	return ReValue;
 }
 
-static void Line4ScanOver(void)
+static void Line4ScanOver(char side)
 {
-	if(GET_IO_KEY_5 == 1)
+	if(GET_IO_KEY_5(side) == 1)
 	{
 		CurrentKeyState = LINE4_OVER;	
 	}
