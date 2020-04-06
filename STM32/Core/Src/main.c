@@ -101,6 +101,7 @@ int main(void)
   while (1)
   {
 	  KeypadScanTest('L');
+	  KeypadScanTest('R');
 	  dataSendBuffer[0] = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
 
 	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, 3);

@@ -23,39 +23,41 @@ typedef enum{
 	LINE4_OVER = 14
 }Key_State;
 
-static Key_State CurrentKeyState = GND_START;
+Key_State CurrentKeyStateLeft = GND_START;
+Key_State CurrentKeyStateRight = GND_START;
 
-static void ConfigurationGnd(char side);
-static void ConfigurationLine1(char side);
-static void ConfigurationLine2(char side);
-static void ConfigurationLine3(char side);
-static void ConfigurationLine4(char side);
+void ConfigurationGnd(char side);
+void ConfigurationLine1(char side);
+void ConfigurationLine2(char side);
+void ConfigurationLine3(char side);
+void ConfigurationLine4(char side);
 
-static void GndScanStart(char side);
-static uint32_t GndScanDetection(char side);
-static void GndScanOver(char side);
+void GndScanStart(char side);
+uint32_t GndScanDetection(char side);
+void GndScanOver(char side);
 
-static void Line1ScanStart(char side);
-static uint32_t Line1ScanDetection(char side);
-static void Line1ScanOver(char side);
+void Line1ScanStart(char side);
+uint32_t Line1ScanDetection(char side);
+void Line1ScanOver(char side);
 
-static void Line2ScanStart(char side);
-static uint32_t Line2ScanDetection(char side);
-static void Line2ScanOver(char side);
+void Line2ScanStart(char side);
+uint32_t Line2ScanDetection(char side);
+void Line2ScanOver(char side);
 
-static void Line3ScanStart(char side);
-static uint32_t Line3ScanDetection(char side);
-static void Line3ScanOver(char side);
+void Line3ScanStart(char side);
+uint32_t Line3ScanDetection(char side);
+void Line3ScanOver(char side);
 
-static void Line4ScanStart(char side);
-static uint32_t Line4ScanDetection(char side);
-static void Line4ScanOver(char side);
+void Line4ScanStart(char side);
+uint32_t Line4ScanDetection(char side);
+void Line4ScanOver(char side);
 
 uint32_t KeypadScan(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
-	switch(CurrentKeyState)
+	switch(*CurrentKeyState)
 	{
 		case GND_START: ReValue = KEY_VALUE_NULL; GndScanStart(side); break;
 		case GND_DETECTION: ReValue = GndScanDetection(side); break;
@@ -80,6 +82,7 @@ uint32_t KeypadScan(char side)
 
 	return ReValue;
 }
+
 
 void KeypadScanTest(char side)
 {
@@ -112,7 +115,8 @@ void KeypadScanTest(char side)
 	}
 }
 
-static void ConfigurationGnd(char side)
+
+void ConfigurationGnd(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -127,7 +131,7 @@ static void ConfigurationGnd(char side)
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
 }
 
-static void ConfigurationLine1(char side)
+void ConfigurationLine1(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -150,7 +154,7 @@ static void ConfigurationLine1(char side)
   HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
 }
 
-static void ConfigurationLine2(char side)
+void ConfigurationLine2(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -174,7 +178,7 @@ static void ConfigurationLine2(char side)
 	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
 }
 
-static void ConfigurationLine3(char side)
+void ConfigurationLine3(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -198,7 +202,7 @@ static void ConfigurationLine3(char side)
 	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
 }
 
-static void ConfigurationLine4(char side)
+void ConfigurationLine4(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -223,23 +227,25 @@ static void ConfigurationLine4(char side)
 
 }
 
-static void GndScanStart(char side)
+void GndScanStart(char side)
 {
 	ConfigurationGnd(side);
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
-		CurrentKeyState = GND_DETECTION;
+		*CurrentKeyState = GND_DETECTION;
 	}
 	else
 	{
-		CurrentKeyState = LINE1_START;
+		*CurrentKeyState = LINE1_START;
 	}
 }
 
-static uint32_t GndScanDetection(char side)
+uint32_t GndScanDetection(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
@@ -264,46 +270,50 @@ static uint32_t GndScanDetection(char side)
 			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
 		}	
 
-		CurrentKeyState = GND_OVER;
+		*CurrentKeyState = GND_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE1_START;
+		*CurrentKeyState = LINE1_START;
 		ReValue = KEY_VALUE_NULL;
 	}
 
 	return ReValue;
 }	
 	
-static void GndScanOver(char side)
+void GndScanOver(char side)
 {
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+
 	if(((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0)))
 	{
-		CurrentKeyState = GND_OVER;	
+		*CurrentKeyState = GND_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE1_START;
+		*CurrentKeyState = LINE1_START;
 	}
 }
 /* Scan line 1 */
-static void Line1ScanStart(char side)
+void Line1ScanStart(char side)
 {
 	ConfigurationLine1(side);
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
-		CurrentKeyState = LINE1_DETECTION;	
+		*CurrentKeyState = LINE1_DETECTION;
 	}
 	else if((!((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))))
 	{
-		CurrentKeyState = LINE2_START;
+		*CurrentKeyState = LINE2_START;
 	}		
 }
 
-static uint32_t Line1ScanDetection(char side)
+uint32_t Line1ScanDetection(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
@@ -324,46 +334,50 @@ static uint32_t Line1ScanDetection(char side)
 			ReValue = KEY_VALUE_FOUR;
 		}
 
-		CurrentKeyState = LINE1_OVER;
+		*CurrentKeyState = LINE1_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE2_START;
+		*CurrentKeyState = LINE2_START;
 		ReValue = KEY_VALUE_NULL;
 	}	
 
 	return ReValue;
 }
 
-static void Line1ScanOver(char side)
+void Line1ScanOver(char side)
 {
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+
 	if((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		CurrentKeyState = LINE1_OVER;	
+		*CurrentKeyState = LINE1_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE2_START;
+		*CurrentKeyState = LINE2_START;
 	}
 }
 /* Scan line 2 */
-static void Line2ScanStart(char side)
+void Line2ScanStart(char side)
 {
 	ConfigurationLine2(side);
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		CurrentKeyState = LINE2_DETECTION;	
+		*CurrentKeyState = LINE2_DETECTION;
 	}
 	else
 	{
-		CurrentKeyState = LINE3_START;
+		*CurrentKeyState = LINE3_START;
 	}		
 }
 
-static uint32_t Line2ScanDetection(char side)
+uint32_t Line2ScanDetection(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -380,46 +394,50 @@ static uint32_t Line2ScanDetection(char side)
 			ReValue = KEY_VALUE_SEVEN;
 		}
 
-		CurrentKeyState = LINE2_OVER;
+		*CurrentKeyState = LINE2_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE3_START;
+		*CurrentKeyState = LINE3_START;
 		ReValue = KEY_VALUE_NULL;
 	}	
 
 	return ReValue;
 }
 
-static void Line2ScanOver(char side)
+void Line2ScanOver(char side)
 {
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		CurrentKeyState = LINE2_OVER;	
+		*CurrentKeyState = LINE2_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE3_START;
+		*CurrentKeyState = LINE3_START;
 	}
 }
 /* Scan line 3 */
-static void Line3ScanStart(char side)
+void Line3ScanStart(char side)
 {
 	ConfigurationLine3(side);
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		CurrentKeyState = LINE3_DETECTION;	
+		*CurrentKeyState = LINE3_DETECTION;
 	}
 	else
 	{
-		CurrentKeyState = LINE4_START;
+		*CurrentKeyState = LINE4_START;
 	}		
 }
 
-static uint32_t Line3ScanDetection(char side)
+uint32_t Line3ScanDetection(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -432,70 +450,76 @@ static uint32_t Line3ScanDetection(char side)
 			ReValue = KEY_VALUE_NINE;
 		}
 
-		CurrentKeyState = LINE3_OVER;
+		*CurrentKeyState = LINE3_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE4_START;
+		*CurrentKeyState = LINE4_START;
 		ReValue = KEY_VALUE_NULL;
 	}	
 
 	return ReValue;
 }
 
-static void Line3ScanOver(char side)
+void Line3ScanOver(char side)
 {
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
-		CurrentKeyState = LINE3_OVER;	
+		*CurrentKeyState = LINE3_OVER;
 	}
 	else
 	{
-		CurrentKeyState = LINE4_START;
+		*CurrentKeyState = LINE4_START;
 	}
 }
 /* Scan line 4 */
-static void Line4ScanStart(char side)
+void Line4ScanStart(char side)
 {
 	ConfigurationLine4(side);
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(GET_IO_KEY_5(side) == 1)
 	{
-		CurrentKeyState = LINE4_DETECTION;	
+		*CurrentKeyState = LINE4_DETECTION;
 	}
 	else
 	{
-		CurrentKeyState = GND_START;
+		*CurrentKeyState = GND_START;
 	}		
 }
 
-static uint32_t Line4ScanDetection(char side)
+uint32_t Line4ScanDetection(char side)
 {
 	uint32_t ReValue;
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(GET_IO_KEY_5(side) == 1)
 	{
 		ReValue = KEY_VALUE_TEN;	
 
-		CurrentKeyState = LINE4_OVER;
+		*CurrentKeyState = LINE4_OVER;
 	}
 	else
 	{
-		CurrentKeyState = GND_START;
+		*CurrentKeyState = GND_START;
 		ReValue = KEY_VALUE_NULL;
 	}	
 
 	return ReValue;
 }
 
-static void Line4ScanOver(char side)
+void Line4ScanOver(char side)
 {
+	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+
 	if(GET_IO_KEY_5(side) == 1)
 	{
-		CurrentKeyState = LINE4_OVER;	
+		*CurrentKeyState = LINE4_OVER;
 	}
 	else
 	{
-		CurrentKeyState = GND_START;
+		*CurrentKeyState = GND_START;
 	}
 }

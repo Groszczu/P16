@@ -62,6 +62,12 @@
 #define GET_IO_KEY_5(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_5(side))
 
 extern uint32_t KeypadScan(char side);
+extern uint32_t KeypadScanLeft(void);
+extern uint32_t KeypadScanRight(void);
+
 extern void KeypadScanTest(char side);
+extern void KeypadScanTestLeft(void);
+extern void KeypadScanTestRight(void);
+
 
 #endif
