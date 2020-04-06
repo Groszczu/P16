@@ -135,8 +135,7 @@ void ConfigurationLine1(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 
@@ -151,7 +150,7 @@ void ConfigurationLine1(char side)
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET);
 }
 
 void ConfigurationLine2(char side)
@@ -159,7 +158,7 @@ void ConfigurationLine2(char side)
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 
@@ -174,16 +173,15 @@ void ConfigurationLine2(char side)
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_2(side), GPIO_PIN_SET); 	//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_2);
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_2(side), GPIO_PIN_SET);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET);
 }
 
 void ConfigurationLine3(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 
@@ -198,16 +196,15 @@ void ConfigurationLine3(char side)
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side), GPIO_PIN_RESET);	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2);
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side), GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET);
 }
 
 void ConfigurationLine4(char side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
 	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 
@@ -222,8 +219,8 @@ void ConfigurationLine4(char side)
   GPIO_InitStructure.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3);
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET); 							//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_4);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET);
 
 }
 
