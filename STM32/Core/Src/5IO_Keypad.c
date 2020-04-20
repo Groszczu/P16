@@ -129,7 +129,7 @@ void ConfigurationGnd(KeypadSide side)
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
   GPIO_InitStructure.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
+  HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
 }
 
 void ConfigurationLine1(KeypadSide side)

@@ -45,23 +45,87 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern USBD_HandleTypeDef hUsbDeviceFS;
 
+struct GamepadReport_t {
+	uint16_t buttons;
+	int8_t left_x;
+	int8_t left_y;
+	int8_t right_x;
+	int8_t right_y;
+};
+typedef struct GamepadReport_t GamepadReport_t;
+
+uint8_t dataSendBuffer[6];
 // global flag for detecting user input
 uint8_t CHANGED = 0;
+GamepadReport_t gamepadReport;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
+void ResetGamepadReport() {
+	gamepadReport.buttons = 0;
+	gamepadReport.left_x = 0;
+	gamepadReport.left_y = 0;
+	gamepadReport.right_x = 0;
+	gamepadReport.right_y = 0;
+}
 
+void GetUserInput() {
+	uint32_t leftKeypadValue = KeypadScan(LEFT);
+	uint32_t rightKeypadValue = KeypadScan(RIGHT);
+	if (leftKeypadValue == 0 && rightKeypadValue == 0) {
+		return;
+	}
+
+	uint8_t changedLeft = 1;
+	uint8_t changedRight = 1;
+
+	switch(leftKeypadValue) {
+		case 1: gamepadReport.left_x = -127; break; // LEFT
+		case 2: gamepadReport.left_y = -127; break;  // UP
+		case 3: changedLeft = 0; break; // PRESS
+		case 4: gamepadReport.left_y = 127; break; // DOWN
+		case 5: gamepadReport.left_x = 127; break;  // RIGHT
+		case 6: changedLeft = 0; break;
+		case 7: gamepadReport.buttons |= 1U << 7; break;
+		case 8: gamepadReport.buttons |= 1U << 6; break;
+		case 9: gamepadReport.buttons |= 1U << 5; break;
+		case 10: gamepadReport.buttons |= 1U << 4; break;
+		case 11: changedLeft = 0; break;
+		case 12: gamepadReport.buttons |= 1U << 3; break;
+		case 13: gamepadReport.buttons |= 1U << 2; break;
+		case 14: gamepadReport.buttons |= 1U << 1; break;
+		case 15: gamepadReport.buttons |= 1U << 0; break;
+	}
+
+	switch(rightKeypadValue) {
+		case 1: gamepadReport.right_x = -127; break; // LEFT
+		case 2: gamepadReport.right_y = -127; break;  // UP
+		case 3: changedRight = 0; break; // PRESS
+		case 4: gamepadReport.right_y = 127; break; // DOWN
+		case 5: gamepadReport.right_x = 127; break;  // RIGHT
+		case 6: gamepadReport.buttons |= 1U << 8; break; // K1
+		case 7: gamepadReport.buttons |= 1U << 9; break; // K2
+		case 8: gamepadReport.buttons |= 1U << 10; break; // K3
+		case 9: gamepadReport.buttons |= 1U << 11; break; // K4
+		case 10: changedRight = 0; break; // K5
+		case 11: gamepadReport.buttons |= 1U << 12; break; // K6
+		case 12: gamepadReport.buttons |= 1U << 13; break; // K7
+		case 13: gamepadReport.buttons |= 1U << 14; break; // K8
+		case 14: gamepadReport.buttons |= 1U << 15; break; // K9
+		case 15: changedRight = 0; break; // K10
+	}
+
+	CHANGED = changedLeft | changedRight;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-extern USBD_HandleTypeDef hUsbDeviceFS;
-
-uint8_t dataSendBuffer[3];
 /* USER CODE END 0 */
 
 /**
@@ -94,21 +158,26 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  dataSendBuffer[0] = 0;
-  dataSendBuffer[1] = 0;
-  dataSendBuffer[2] = 0;
+  ResetGamepadReport();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  KeypadScanTest(LEFT);
-	  KeypadScanTest(RIGHT);
-	  dataSendBuffer[0] = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+	  ResetGamepadReport();
+	  GetUserInput();
 
-	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, 3);
-	  HAL_Delay(100);
+	  dataSendBuffer[0] = (uint8_t) (gamepadReport.buttons & 0x00FF);
+	  dataSendBuffer[1] = (uint8_t) (gamepadReport.buttons >> 8);
+	  dataSendBuffer[2] = gamepadReport.left_x;
+	  dataSendBuffer[3] = gamepadReport.left_y;
+	  dataSendBuffer[4] = gamepadReport.right_x;
+	  dataSendBuffer[5] = gamepadReport.right_y;
+
+	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, 6);
+	  HAL_Delay(64);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

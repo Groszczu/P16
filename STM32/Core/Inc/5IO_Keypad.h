@@ -67,12 +67,7 @@ typedef enum {
 #define GET_IO_KEY_5(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_5(side))
 
 uint32_t KeypadScan(KeypadSide side);
-uint32_t KeypadScanLeft(void);
-uint32_t KeypadScanRight(void);
 
 void KeypadScanTest(KeypadSide side);
-void KeypadScanTestLeft(void);
-void KeypadScanTestRight(void);
-
 
 #endif
