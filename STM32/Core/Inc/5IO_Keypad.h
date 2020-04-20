@@ -4,6 +4,11 @@
 #include "stm32f4xx_hal.h"
 /* Define key value */
 
+typedef enum {
+	LEFT,
+	RIGHT
+} KeypadSide;
+
 
 #define KEY_VALUE_NULL ((uint32_t)0) 
 #define KEY_VALUE_LEFT ((uint32_t)1)
@@ -48,12 +53,12 @@
 
 
 // Test
-#define IO_KEY_GPIO(side) 	(side == 'L' ? LEFT_IO_KEY_GPIO : RIGHT_IO_KEY_GPIO)
-#define IO_KEY_1(side) 		(side == 'L' ? LEFT_IO_KEY_1 : RIGHT_IO_KEY_1)
-#define IO_KEY_2(side) 		(side == 'L' ? LEFT_IO_KEY_2 : RIGHT_IO_KEY_2)
-#define IO_KEY_3(side) 		(side == 'L' ? LEFT_IO_KEY_3 : RIGHT_IO_KEY_3)
-#define IO_KEY_4(side) 		(side == 'L' ? LEFT_IO_KEY_4 : RIGHT_IO_KEY_4)
-#define IO_KEY_5(side) 		(side == 'L' ? LEFT_IO_KEY_5 : RIGHT_IO_KEY_5)
+#define IO_KEY_GPIO(side) 	(side == LEFT ? LEFT_IO_KEY_GPIO : RIGHT_IO_KEY_GPIO)
+#define IO_KEY_1(side) 		(side == LEFT ? LEFT_IO_KEY_1 : RIGHT_IO_KEY_1)
+#define IO_KEY_2(side) 		(side == LEFT ? LEFT_IO_KEY_2 : RIGHT_IO_KEY_2)
+#define IO_KEY_3(side) 		(side == LEFT ? LEFT_IO_KEY_3 : RIGHT_IO_KEY_3)
+#define IO_KEY_4(side) 		(side == LEFT ? LEFT_IO_KEY_4 : RIGHT_IO_KEY_4)
+#define IO_KEY_5(side) 		(side == LEFT ? LEFT_IO_KEY_5 : RIGHT_IO_KEY_5)
 
 #define GET_IO_KEY_1(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_1(side))
 #define GET_IO_KEY_2(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_2(side))
@@ -61,13 +66,13 @@
 #define GET_IO_KEY_4(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_4(side))
 #define GET_IO_KEY_5(side) HAL_GPIO_ReadPin(IO_KEY_GPIO(side), IO_KEY_5(side))
 
-extern uint32_t KeypadScan(char side);
-extern uint32_t KeypadScanLeft(void);
-extern uint32_t KeypadScanRight(void);
+uint32_t KeypadScan(KeypadSide side);
+uint32_t KeypadScanLeft(void);
+uint32_t KeypadScanRight(void);
 
-extern void KeypadScanTest(char side);
-extern void KeypadScanTestLeft(void);
-extern void KeypadScanTestRight(void);
+void KeypadScanTest(KeypadSide side);
+void KeypadScanTestLeft(void);
+void KeypadScanTestRight(void);
 
 
 #endif

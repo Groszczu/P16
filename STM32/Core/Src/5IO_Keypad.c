@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "5IO_Keypad.h"
 
+
 typedef enum{
 	GND_START = 0,
 	GND_DETECTION = 1,
@@ -26,36 +27,36 @@ typedef enum{
 Key_State CurrentKeyStateLeft = GND_START;
 Key_State CurrentKeyStateRight = GND_START;
 
-void ConfigurationGnd(char side);
-void ConfigurationLine1(char side);
-void ConfigurationLine2(char side);
-void ConfigurationLine3(char side);
-void ConfigurationLine4(char side);
+void ConfigurationGnd(KeypadSide side);
+void ConfigurationLine1(KeypadSide side);
+void ConfigurationLine2(KeypadSide side);
+void ConfigurationLine3(KeypadSide side);
+void ConfigurationLine4(KeypadSide side);
 
-void GndScanStart(char side);
-uint32_t GndScanDetection(char side);
-void GndScanOver(char side);
+void GndScanStart(KeypadSide side);
+uint32_t GndScanDetection(KeypadSide side);
+void GndScanOver(KeypadSide side);
 
-void Line1ScanStart(char side);
-uint32_t Line1ScanDetection(char side);
-void Line1ScanOver(char side);
+void Line1ScanStart(KeypadSide side);
+uint32_t Line1ScanDetection(KeypadSide side);
+void Line1ScanOver(KeypadSide side);
 
-void Line2ScanStart(char side);
-uint32_t Line2ScanDetection(char side);
-void Line2ScanOver(char side);
+void Line2ScanStart(KeypadSide side);
+uint32_t Line2ScanDetection(KeypadSide side);
+void Line2ScanOver(KeypadSide side);
 
-void Line3ScanStart(char side);
-uint32_t Line3ScanDetection(char side);
-void Line3ScanOver(char side);
+void Line3ScanStart(KeypadSide side);
+uint32_t Line3ScanDetection(KeypadSide side);
+void Line3ScanOver(KeypadSide side);
 
-void Line4ScanStart(char side);
-uint32_t Line4ScanDetection(char side);
-void Line4ScanOver(char side);
+void Line4ScanStart(KeypadSide side);
+uint32_t Line4ScanDetection(KeypadSide side);
+void Line4ScanOver(KeypadSide side);
 
-uint32_t KeypadScan(char side)
+uint32_t KeypadScan(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	switch(*CurrentKeyState)
 	{
@@ -84,7 +85,7 @@ uint32_t KeypadScan(char side)
 }
 
 
-void KeypadScanTest(char side)
+void KeypadScanTest(KeypadSide side)
 {
 	uint32_t TempKeyValue;
 
@@ -116,7 +117,7 @@ void KeypadScanTest(char side)
 }
 
 
-void ConfigurationGnd(char side)
+void ConfigurationGnd(KeypadSide side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -131,7 +132,7 @@ void ConfigurationGnd(char side)
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
 }
 
-void ConfigurationLine1(char side)
+void ConfigurationLine1(KeypadSide side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -153,7 +154,7 @@ void ConfigurationLine1(char side)
   HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET);
 }
 
-void ConfigurationLine2(char side)
+void ConfigurationLine2(KeypadSide side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -177,7 +178,7 @@ void ConfigurationLine2(char side)
 	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET);
 }
 
-void ConfigurationLine3(char side)
+void ConfigurationLine3(KeypadSide side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -200,7 +201,7 @@ void ConfigurationLine3(char side)
 	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET);
 }
 
-void ConfigurationLine4(char side)
+void ConfigurationLine4(KeypadSide side)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -224,10 +225,10 @@ void ConfigurationLine4(char side)
 
 }
 
-void GndScanStart(char side)
+void GndScanStart(KeypadSide side)
 {
 	ConfigurationGnd(side);
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
@@ -239,20 +240,20 @@ void GndScanStart(char side)
 	}
 }
 
-uint32_t GndScanDetection(char side)
+uint32_t GndScanDetection(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
 	{
 		if(GET_IO_KEY_1(side) == 0)
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_LEFT : KEY_VALUE_LEFT);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_LEFT : KEY_VALUE_LEFT);
 		}
 		else if((GET_IO_KEY_2(side) == 0))
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_UP : KEY_VALUE_UP);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_UP : KEY_VALUE_UP);
 		}
 		else if((GET_IO_KEY_3(side) == 0))
 		{
@@ -260,11 +261,11 @@ uint32_t GndScanDetection(char side)
 		}
 		else if((GET_IO_KEY_4(side) == 0))
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_DOWN : KEY_VALUE_DOWN);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_DOWN : KEY_VALUE_DOWN);
 		}
 		else if((GET_IO_KEY_5(side) == 0))
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
 		}	
 
 		*CurrentKeyState = GND_OVER;
@@ -278,9 +279,9 @@ uint32_t GndScanDetection(char side)
 	return ReValue;
 }	
 	
-void GndScanOver(char side)
+void GndScanOver(KeypadSide side)
 {
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0)))
 	{
@@ -292,10 +293,10 @@ void GndScanOver(char side)
 	}
 }
 /* Scan line 1 */
-void Line1ScanStart(char side)
+void Line1ScanStart(KeypadSide side)
 {
 	ConfigurationLine1(side);
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
@@ -307,10 +308,10 @@ void Line1ScanStart(char side)
 	}		
 }
 
-uint32_t Line1ScanDetection(char side)
+uint32_t Line1ScanDetection(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
 	{
@@ -342,9 +343,9 @@ uint32_t Line1ScanDetection(char side)
 	return ReValue;
 }
 
-void Line1ScanOver(char side)
+void Line1ScanOver(KeypadSide side)
 {
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -356,10 +357,10 @@ void Line1ScanOver(char side)
 	}
 }
 /* Scan line 2 */
-void Line2ScanStart(char side)
+void Line2ScanStart(KeypadSide side)
 {
 	ConfigurationLine2(side);
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -371,10 +372,10 @@ void Line2ScanStart(char side)
 	}		
 }
 
-uint32_t Line2ScanDetection(char side)
+uint32_t Line2ScanDetection(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -402,9 +403,9 @@ uint32_t Line2ScanDetection(char side)
 	return ReValue;
 }
 
-void Line2ScanOver(char side)
+void Line2ScanOver(KeypadSide side)
 {
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -416,10 +417,10 @@ void Line2ScanOver(char side)
 	}
 }
 /* Scan line 3 */
-void Line3ScanStart(char side)
+void Line3ScanStart(KeypadSide side)
 {
 	ConfigurationLine3(side);
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -431,10 +432,10 @@ void Line3ScanStart(char side)
 	}		
 }
 
-uint32_t Line3ScanDetection(char side)
+uint32_t Line3ScanDetection(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -458,9 +459,9 @@ uint32_t Line3ScanDetection(char side)
 	return ReValue;
 }
 
-void Line3ScanOver(char side)
+void Line3ScanOver(KeypadSide side)
 {
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
 	{
@@ -472,10 +473,10 @@ void Line3ScanOver(char side)
 	}
 }
 /* Scan line 4 */
-void Line4ScanStart(char side)
+void Line4ScanStart(KeypadSide side)
 {
 	ConfigurationLine4(side);
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(GET_IO_KEY_5(side) == 1)
 	{
@@ -487,10 +488,10 @@ void Line4ScanStart(char side)
 	}		
 }
 
-uint32_t Line4ScanDetection(char side)
+uint32_t Line4ScanDetection(KeypadSide side)
 {
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(GET_IO_KEY_5(side) == 1)
 	{
@@ -507,9 +508,9 @@ uint32_t Line4ScanDetection(char side)
 	return ReValue;
 }
 
-void Line4ScanOver(char side)
+void Line4ScanOver(KeypadSide side)
 {
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
 
 	if(GET_IO_KEY_5(side) == 1)
 	{

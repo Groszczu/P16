@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  000201a8  2**0
                   CONTENTS, READONLY
- 12 .debug_info   000138e7  00000000  00000000  000201d8  2**0
+ 12 .debug_info   0001391f  00000000  00000000  000201d8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00002ed3  00000000  00000000  00033abf  2**0
+ 13 .debug_abbrev 00002ebd  00000000  00000000  00033af7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00000c50  00000000  00000000  00036998  2**3
+ 14 .debug_aranges 00000c50  00000000  00000000  000369b8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00000ae8  00000000  00000000  000375e8  2**3
+ 15 .debug_ranges 00000ae8  00000000  00000000  00037608  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00023d71  00000000  00000000  000380d0  2**0
+ 16 .debug_macro  00023e86  00000000  00000000  000380f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000e2a5  00000000  00000000  0005be41  2**0
+ 17 .debug_line   0000e2b3  00000000  00000000  0005bf76  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000c4a3a  00000000  00000000  0006a0e6  2**0
+ 18 .debug_str    000c4a53  00000000  00000000  0006a229  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  0012eb20  2**0
+ 19 .comment      0000007b  00000000  00000000  0012ec7c  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00003798  00000000  00000000  0012eb9c  2**2
+ 20 .debug_frame  00003798  00000000  00000000  0012ecf8  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -414,11 +414,11 @@ Disassembly of section .text:
  800056e:	bf00      	nop
 
 08000570 <KeypadScan>:
-void Line4ScanStart(char side);
-uint32_t Line4ScanDetection(char side);
-void Line4ScanOver(char side);
+void Line4ScanStart(KeypadSide side);
+uint32_t Line4ScanDetection(KeypadSide side);
+void Line4ScanOver(KeypadSide side);
 
-uint32_t KeypadScan(char side)
+uint32_t KeypadScan(KeypadSide side)
 {
  8000570:	b580      	push	{r7, lr}
  8000572:	b084      	sub	sp, #16
@@ -426,9 +426,9 @@ uint32_t KeypadScan(char side)
  8000576:	4603      	mov	r3, r0
  8000578:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  800057a:	79fb      	ldrb	r3, [r7, #7]
- 800057c:	2b4c      	cmp	r3, #76	; 0x4c
+ 800057c:	2b00      	cmp	r3, #0
  800057e:	d101      	bne.n	8000584 <KeypadScan+0x14>
  8000580:	4b49      	ldr	r3, [pc, #292]	; (80006a8 <KeypadScan+0x138>)
  8000582:	e000      	b.n	8000586 <KeypadScan+0x16>
@@ -578,7 +578,7 @@ uint32_t KeypadScan(char side)
 080006b0 <KeypadScanTest>:
 
 
-void KeypadScanTest(char side)
+void KeypadScanTest(KeypadSide side)
 {
  80006b0:	b580      	push	{r7, lr}
  80006b2:	b084      	sub	sp, #16
@@ -713,7 +713,7 @@ void KeypadScanTest(char side)
 080007dc <ConfigurationGnd>:
 
 
-void ConfigurationGnd(char side)
+void ConfigurationGnd(KeypadSide side)
 {
  80007dc:	b580      	push	{r7, lr}
  80007de:	b08a      	sub	sp, #40	; 0x28
@@ -752,34 +752,34 @@ void ConfigurationGnd(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
  800081e:	79fb      	ldrb	r3, [r7, #7]
- 8000820:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000820:	2b00      	cmp	r3, #0
  8000822:	d102      	bne.n	800082a <ConfigurationGnd+0x4e>
  8000824:	f44f 4200 	mov.w	r2, #32768	; 0x8000
  8000828:	e000      	b.n	800082c <ConfigurationGnd+0x50>
  800082a:	2240      	movs	r2, #64	; 0x40
  800082c:	79fb      	ldrb	r3, [r7, #7]
- 800082e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800082e:	2b00      	cmp	r3, #0
  8000830:	d102      	bne.n	8000838 <ConfigurationGnd+0x5c>
  8000832:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000836:	e000      	b.n	800083a <ConfigurationGnd+0x5e>
  8000838:	2308      	movs	r3, #8
  800083a:	4313      	orrs	r3, r2
  800083c:	79fa      	ldrb	r2, [r7, #7]
- 800083e:	2a4c      	cmp	r2, #76	; 0x4c
+ 800083e:	2a00      	cmp	r2, #0
  8000840:	d102      	bne.n	8000848 <ConfigurationGnd+0x6c>
  8000842:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000846:	e000      	b.n	800084a <ConfigurationGnd+0x6e>
  8000848:	2204      	movs	r2, #4
  800084a:	4313      	orrs	r3, r2
  800084c:	79fa      	ldrb	r2, [r7, #7]
- 800084e:	2a4c      	cmp	r2, #76	; 0x4c
+ 800084e:	2a00      	cmp	r2, #0
  8000850:	d102      	bne.n	8000858 <ConfigurationGnd+0x7c>
  8000852:	f44f 5280 	mov.w	r2, #4096	; 0x1000
  8000856:	e000      	b.n	800085a <ConfigurationGnd+0x7e>
  8000858:	2202      	movs	r2, #2
  800085a:	4313      	orrs	r3, r2
  800085c:	79fa      	ldrb	r2, [r7, #7]
- 800085e:	2a4c      	cmp	r2, #76	; 0x4c
+ 800085e:	2a00      	cmp	r2, #0
  8000860:	d102      	bne.n	8000868 <ConfigurationGnd+0x8c>
  8000862:	f44f 6200 	mov.w	r2, #2048	; 0x800
  8000866:	e000      	b.n	800086a <ConfigurationGnd+0x8e>
@@ -797,7 +797,7 @@ void ConfigurationGnd(char side)
  8000878:	61fb      	str	r3, [r7, #28]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure); //GPIO_Init(IO_KEY_GPIO, &GPIO_InitStructure);
  800087a:	79fb      	ldrb	r3, [r7, #7]
- 800087c:	2b4c      	cmp	r3, #76	; 0x4c
+ 800087c:	2b00      	cmp	r3, #0
  800087e:	d101      	bne.n	8000884 <ConfigurationGnd+0xa8>
  8000880:	4b07      	ldr	r3, [pc, #28]	; (80008a0 <ConfigurationGnd+0xc4>)
  8000882:	e000      	b.n	8000886 <ConfigurationGnd+0xaa>
@@ -818,7 +818,7 @@ void ConfigurationGnd(char side)
 
 080008a8 <ConfigurationLine1>:
 
-void ConfigurationLine1(char side)
+void ConfigurationLine1(KeypadSide side)
 {
  80008a8:	b580      	push	{r7, lr}
  80008aa:	b08a      	sub	sp, #40	; 0x28
@@ -827,8 +827,7 @@ void ConfigurationLine1(char side)
  80008b0:	71fb      	strb	r3, [r7, #7]
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
  80008b2:	2300      	movs	r3, #0
  80008b4:	613b      	str	r3, [r7, #16]
  80008b6:	4b3c      	ldr	r3, [pc, #240]	; (80009a8 <ConfigurationLine1+0x100>)
@@ -858,7 +857,7 @@ void ConfigurationLine1(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_1(side);
  80008ea:	79fb      	ldrb	r3, [r7, #7]
- 80008ec:	2b4c      	cmp	r3, #76	; 0x4c
+ 80008ec:	2b00      	cmp	r3, #0
  80008ee:	d102      	bne.n	80008f6 <ConfigurationLine1+0x4e>
  80008f0:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  80008f4:	e000      	b.n	80008f8 <ConfigurationLine1+0x50>
@@ -872,7 +871,7 @@ void ConfigurationLine1(char side)
  8000900:	61bb      	str	r3, [r7, #24]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000902:	79fb      	ldrb	r3, [r7, #7]
- 8000904:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000904:	2b00      	cmp	r3, #0
  8000906:	d101      	bne.n	800090c <ConfigurationLine1+0x64>
  8000908:	4b28      	ldr	r3, [pc, #160]	; (80009ac <ConfigurationLine1+0x104>)
  800090a:	e000      	b.n	800090e <ConfigurationLine1+0x66>
@@ -884,27 +883,27 @@ void ConfigurationLine1(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
  800091a:	79fb      	ldrb	r3, [r7, #7]
- 800091c:	2b4c      	cmp	r3, #76	; 0x4c
+ 800091c:	2b00      	cmp	r3, #0
  800091e:	d102      	bne.n	8000926 <ConfigurationLine1+0x7e>
  8000920:	f44f 4280 	mov.w	r2, #16384	; 0x4000
  8000924:	e000      	b.n	8000928 <ConfigurationLine1+0x80>
  8000926:	2208      	movs	r2, #8
  8000928:	79fb      	ldrb	r3, [r7, #7]
- 800092a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800092a:	2b00      	cmp	r3, #0
  800092c:	d102      	bne.n	8000934 <ConfigurationLine1+0x8c>
  800092e:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8000932:	e000      	b.n	8000936 <ConfigurationLine1+0x8e>
  8000934:	2304      	movs	r3, #4
  8000936:	4313      	orrs	r3, r2
  8000938:	79fa      	ldrb	r2, [r7, #7]
- 800093a:	2a4c      	cmp	r2, #76	; 0x4c
+ 800093a:	2a00      	cmp	r2, #0
  800093c:	d102      	bne.n	8000944 <ConfigurationLine1+0x9c>
  800093e:	f44f 5280 	mov.w	r2, #4096	; 0x1000
  8000942:	e000      	b.n	8000946 <ConfigurationLine1+0x9e>
  8000944:	2202      	movs	r2, #2
  8000946:	4313      	orrs	r3, r2
  8000948:	79fa      	ldrb	r2, [r7, #7]
- 800094a:	2a4c      	cmp	r2, #76	; 0x4c
+ 800094a:	2a00      	cmp	r2, #0
  800094c:	d102      	bne.n	8000954 <ConfigurationLine1+0xac>
  800094e:	f44f 6200 	mov.w	r2, #2048	; 0x800
  8000952:	e000      	b.n	8000956 <ConfigurationLine1+0xae>
@@ -922,7 +921,7 @@ void ConfigurationLine1(char side)
  8000964:	61fb      	str	r3, [r7, #28]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000966:	79fb      	ldrb	r3, [r7, #7]
- 8000968:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000968:	2b00      	cmp	r3, #0
  800096a:	d101      	bne.n	8000970 <ConfigurationLine1+0xc8>
  800096c:	4b0f      	ldr	r3, [pc, #60]	; (80009ac <ConfigurationLine1+0x104>)
  800096e:	e000      	b.n	8000972 <ConfigurationLine1+0xca>
@@ -932,15 +931,15 @@ void ConfigurationLine1(char side)
  8000978:	4618      	mov	r0, r3
  800097a:	f001 fd37 	bl	80023ec <HAL_GPIO_Init>
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET); //GPIO_SetBits(IO_KEY_GPIO, IO_KEY_1);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_SET);
  800097e:	79fb      	ldrb	r3, [r7, #7]
- 8000980:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000980:	2b00      	cmp	r3, #0
  8000982:	d101      	bne.n	8000988 <ConfigurationLine1+0xe0>
  8000984:	4809      	ldr	r0, [pc, #36]	; (80009ac <ConfigurationLine1+0x104>)
  8000986:	e000      	b.n	800098a <ConfigurationLine1+0xe2>
  8000988:	4809      	ldr	r0, [pc, #36]	; (80009b0 <ConfigurationLine1+0x108>)
  800098a:	79fb      	ldrb	r3, [r7, #7]
- 800098c:	2b4c      	cmp	r3, #76	; 0x4c
+ 800098c:	2b00      	cmp	r3, #0
  800098e:	d102      	bne.n	8000996 <ConfigurationLine1+0xee>
  8000990:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  8000994:	e000      	b.n	8000998 <ConfigurationLine1+0xf0>
@@ -959,7 +958,7 @@ void ConfigurationLine1(char side)
 
 080009b4 <ConfigurationLine2>:
 
-void ConfigurationLine2(char side)
+void ConfigurationLine2(KeypadSide side)
 {
  80009b4:	b580      	push	{r7, lr}
  80009b6:	b08a      	sub	sp, #40	; 0x28
@@ -969,7 +968,7 @@ void ConfigurationLine2(char side)
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
   /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
  80009be:	2300      	movs	r3, #0
  80009c0:	613b      	str	r3, [r7, #16]
  80009c2:	4b45      	ldr	r3, [pc, #276]	; (8000ad8 <ConfigurationLine2+0x124>)
@@ -999,13 +998,13 @@ void ConfigurationLine2(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side);
  80009f6:	79fb      	ldrb	r3, [r7, #7]
- 80009f8:	2b4c      	cmp	r3, #76	; 0x4c
+ 80009f8:	2b00      	cmp	r3, #0
  80009fa:	d102      	bne.n	8000a02 <ConfigurationLine2+0x4e>
  80009fc:	f44f 4200 	mov.w	r2, #32768	; 0x8000
  8000a00:	e000      	b.n	8000a04 <ConfigurationLine2+0x50>
  8000a02:	2240      	movs	r2, #64	; 0x40
  8000a04:	79fb      	ldrb	r3, [r7, #7]
- 8000a06:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a06:	2b00      	cmp	r3, #0
  8000a08:	d102      	bne.n	8000a10 <ConfigurationLine2+0x5c>
  8000a0a:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000a0e:	e000      	b.n	8000a12 <ConfigurationLine2+0x5e>
@@ -1020,7 +1019,7 @@ void ConfigurationLine2(char side)
  8000a1c:	61bb      	str	r3, [r7, #24]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000a1e:	79fb      	ldrb	r3, [r7, #7]
- 8000a20:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a20:	2b00      	cmp	r3, #0
  8000a22:	d101      	bne.n	8000a28 <ConfigurationLine2+0x74>
  8000a24:	4b2d      	ldr	r3, [pc, #180]	; (8000adc <ConfigurationLine2+0x128>)
  8000a26:	e000      	b.n	8000a2a <ConfigurationLine2+0x76>
@@ -1032,20 +1031,20 @@ void ConfigurationLine2(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_3(side) | IO_KEY_4(side) | IO_KEY_5(side);
  8000a36:	79fb      	ldrb	r3, [r7, #7]
- 8000a38:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a38:	2b00      	cmp	r3, #0
  8000a3a:	d102      	bne.n	8000a42 <ConfigurationLine2+0x8e>
  8000a3c:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000a40:	e000      	b.n	8000a44 <ConfigurationLine2+0x90>
  8000a42:	2204      	movs	r2, #4
  8000a44:	79fb      	ldrb	r3, [r7, #7]
- 8000a46:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a46:	2b00      	cmp	r3, #0
  8000a48:	d102      	bne.n	8000a50 <ConfigurationLine2+0x9c>
  8000a4a:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8000a4e:	e000      	b.n	8000a52 <ConfigurationLine2+0x9e>
  8000a50:	2302      	movs	r3, #2
  8000a52:	4313      	orrs	r3, r2
  8000a54:	79fa      	ldrb	r2, [r7, #7]
- 8000a56:	2a4c      	cmp	r2, #76	; 0x4c
+ 8000a56:	2a00      	cmp	r2, #0
  8000a58:	d102      	bne.n	8000a60 <ConfigurationLine2+0xac>
  8000a5a:	f44f 6200 	mov.w	r2, #2048	; 0x800
  8000a5e:	e000      	b.n	8000a62 <ConfigurationLine2+0xae>
@@ -1063,7 +1062,7 @@ void ConfigurationLine2(char side)
  8000a70:	61fb      	str	r3, [r7, #28]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000a72:	79fb      	ldrb	r3, [r7, #7]
- 8000a74:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a74:	2b00      	cmp	r3, #0
  8000a76:	d101      	bne.n	8000a7c <ConfigurationLine2+0xc8>
  8000a78:	4b18      	ldr	r3, [pc, #96]	; (8000adc <ConfigurationLine2+0x128>)
  8000a7a:	e000      	b.n	8000a7e <ConfigurationLine2+0xca>
@@ -1073,15 +1072,15 @@ void ConfigurationLine2(char side)
  8000a84:	4618      	mov	r0, r3
  8000a86:	f001 fcb1 	bl	80023ec <HAL_GPIO_Init>
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_2(side), GPIO_PIN_SET); 	//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_2);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_2(side), GPIO_PIN_SET);
  8000a8a:	79fb      	ldrb	r3, [r7, #7]
- 8000a8c:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a8c:	2b00      	cmp	r3, #0
  8000a8e:	d101      	bne.n	8000a94 <ConfigurationLine2+0xe0>
  8000a90:	4812      	ldr	r0, [pc, #72]	; (8000adc <ConfigurationLine2+0x128>)
  8000a92:	e000      	b.n	8000a96 <ConfigurationLine2+0xe2>
  8000a94:	4812      	ldr	r0, [pc, #72]	; (8000ae0 <ConfigurationLine2+0x12c>)
  8000a96:	79fb      	ldrb	r3, [r7, #7]
- 8000a98:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000a98:	2b00      	cmp	r3, #0
  8000a9a:	d102      	bne.n	8000aa2 <ConfigurationLine2+0xee>
  8000a9c:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000aa0:	e000      	b.n	8000aa4 <ConfigurationLine2+0xf0>
@@ -1089,15 +1088,15 @@ void ConfigurationLine2(char side)
  8000aa4:	2201      	movs	r2, #1
  8000aa6:	4619      	mov	r1, r3
  8000aa8:	f001 fe52 	bl	8002750 <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side), GPIO_PIN_RESET);
  8000aac:	79fb      	ldrb	r3, [r7, #7]
- 8000aae:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000aae:	2b00      	cmp	r3, #0
  8000ab0:	d101      	bne.n	8000ab6 <ConfigurationLine2+0x102>
  8000ab2:	480a      	ldr	r0, [pc, #40]	; (8000adc <ConfigurationLine2+0x128>)
  8000ab4:	e000      	b.n	8000ab8 <ConfigurationLine2+0x104>
  8000ab6:	480a      	ldr	r0, [pc, #40]	; (8000ae0 <ConfigurationLine2+0x12c>)
  8000ab8:	79fb      	ldrb	r3, [r7, #7]
- 8000aba:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000aba:	2b00      	cmp	r3, #0
  8000abc:	d102      	bne.n	8000ac4 <ConfigurationLine2+0x110>
  8000abe:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  8000ac2:	e000      	b.n	8000ac6 <ConfigurationLine2+0x112>
@@ -1117,7 +1116,7 @@ void ConfigurationLine2(char side)
 
 08000ae4 <ConfigurationLine3>:
 
-void ConfigurationLine3(char side)
+void ConfigurationLine3(KeypadSide side)
 {
  8000ae4:	b580      	push	{r7, lr}
  8000ae6:	b08a      	sub	sp, #40	; 0x28
@@ -1126,8 +1125,7 @@ void ConfigurationLine3(char side)
  8000aec:	71fb      	strb	r3, [r7, #7]
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
  8000aee:	2300      	movs	r3, #0
  8000af0:	613b      	str	r3, [r7, #16]
  8000af2:	4b49      	ldr	r3, [pc, #292]	; (8000c18 <ConfigurationLine3+0x134>)
@@ -1157,20 +1155,20 @@ void ConfigurationLine3(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side);
  8000b26:	79fb      	ldrb	r3, [r7, #7]
- 8000b28:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000b28:	2b00      	cmp	r3, #0
  8000b2a:	d102      	bne.n	8000b32 <ConfigurationLine3+0x4e>
  8000b2c:	f44f 4200 	mov.w	r2, #32768	; 0x8000
  8000b30:	e000      	b.n	8000b34 <ConfigurationLine3+0x50>
  8000b32:	2240      	movs	r2, #64	; 0x40
  8000b34:	79fb      	ldrb	r3, [r7, #7]
- 8000b36:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000b36:	2b00      	cmp	r3, #0
  8000b38:	d102      	bne.n	8000b40 <ConfigurationLine3+0x5c>
  8000b3a:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000b3e:	e000      	b.n	8000b42 <ConfigurationLine3+0x5e>
  8000b40:	2308      	movs	r3, #8
  8000b42:	4313      	orrs	r3, r2
  8000b44:	79fa      	ldrb	r2, [r7, #7]
- 8000b46:	2a4c      	cmp	r2, #76	; 0x4c
+ 8000b46:	2a00      	cmp	r2, #0
  8000b48:	d102      	bne.n	8000b50 <ConfigurationLine3+0x6c>
  8000b4a:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000b4e:	e000      	b.n	8000b52 <ConfigurationLine3+0x6e>
@@ -1185,7 +1183,7 @@ void ConfigurationLine3(char side)
  8000b5c:	61bb      	str	r3, [r7, #24]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000b5e:	79fb      	ldrb	r3, [r7, #7]
- 8000b60:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000b60:	2b00      	cmp	r3, #0
  8000b62:	d101      	bne.n	8000b68 <ConfigurationLine3+0x84>
  8000b64:	4b2d      	ldr	r3, [pc, #180]	; (8000c1c <ConfigurationLine3+0x138>)
  8000b66:	e000      	b.n	8000b6a <ConfigurationLine3+0x86>
@@ -1197,13 +1195,13 @@ void ConfigurationLine3(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_4(side) | IO_KEY_5(side);
  8000b76:	79fb      	ldrb	r3, [r7, #7]
- 8000b78:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000b78:	2b00      	cmp	r3, #0
  8000b7a:	d102      	bne.n	8000b82 <ConfigurationLine3+0x9e>
  8000b7c:	f44f 5280 	mov.w	r2, #4096	; 0x1000
  8000b80:	e000      	b.n	8000b84 <ConfigurationLine3+0xa0>
  8000b82:	2202      	movs	r2, #2
  8000b84:	79fb      	ldrb	r3, [r7, #7]
- 8000b86:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000b86:	2b00      	cmp	r3, #0
  8000b88:	d102      	bne.n	8000b90 <ConfigurationLine3+0xac>
  8000b8a:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8000b8e:	e000      	b.n	8000b92 <ConfigurationLine3+0xae>
@@ -1221,7 +1219,7 @@ void ConfigurationLine3(char side)
  8000ba0:	61fb      	str	r3, [r7, #28]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000ba2:	79fb      	ldrb	r3, [r7, #7]
- 8000ba4:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ba4:	2b00      	cmp	r3, #0
  8000ba6:	d101      	bne.n	8000bac <ConfigurationLine3+0xc8>
  8000ba8:	4b1c      	ldr	r3, [pc, #112]	; (8000c1c <ConfigurationLine3+0x138>)
  8000baa:	e000      	b.n	8000bae <ConfigurationLine3+0xca>
@@ -1231,21 +1229,21 @@ void ConfigurationLine3(char side)
  8000bb4:	4618      	mov	r0, r3
  8000bb6:	f001 fc19 	bl	80023ec <HAL_GPIO_Init>
 
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side), GPIO_PIN_RESET);	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side), GPIO_PIN_RESET);
  8000bba:	79fb      	ldrb	r3, [r7, #7]
- 8000bbc:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000bbc:	2b00      	cmp	r3, #0
  8000bbe:	d101      	bne.n	8000bc4 <ConfigurationLine3+0xe0>
  8000bc0:	4816      	ldr	r0, [pc, #88]	; (8000c1c <ConfigurationLine3+0x138>)
  8000bc2:	e000      	b.n	8000bc6 <ConfigurationLine3+0xe2>
  8000bc4:	4816      	ldr	r0, [pc, #88]	; (8000c20 <ConfigurationLine3+0x13c>)
  8000bc6:	79fb      	ldrb	r3, [r7, #7]
- 8000bc8:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000bc8:	2b00      	cmp	r3, #0
  8000bca:	d101      	bne.n	8000bd0 <ConfigurationLine3+0xec>
  8000bcc:	4a15      	ldr	r2, [pc, #84]	; (8000c24 <ConfigurationLine3+0x140>)
  8000bce:	e000      	b.n	8000bd2 <ConfigurationLine3+0xee>
  8000bd0:	2240      	movs	r2, #64	; 0x40
  8000bd2:	79fb      	ldrb	r3, [r7, #7]
- 8000bd4:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000bd4:	2b00      	cmp	r3, #0
  8000bd6:	d102      	bne.n	8000bde <ConfigurationLine3+0xfa>
  8000bd8:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000bdc:	e000      	b.n	8000be0 <ConfigurationLine3+0xfc>
@@ -1256,15 +1254,15 @@ void ConfigurationLine3(char side)
  8000be6:	2200      	movs	r2, #0
  8000be8:	4619      	mov	r1, r3
  8000bea:	f001 fdb1 	bl	8002750 <HAL_GPIO_WritePin>
-	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET); 				//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_3);
+	HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_3(side), GPIO_PIN_SET);
  8000bee:	79fb      	ldrb	r3, [r7, #7]
- 8000bf0:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000bf0:	2b00      	cmp	r3, #0
  8000bf2:	d101      	bne.n	8000bf8 <ConfigurationLine3+0x114>
  8000bf4:	4809      	ldr	r0, [pc, #36]	; (8000c1c <ConfigurationLine3+0x138>)
  8000bf6:	e000      	b.n	8000bfa <ConfigurationLine3+0x116>
  8000bf8:	4809      	ldr	r0, [pc, #36]	; (8000c20 <ConfigurationLine3+0x13c>)
  8000bfa:	79fb      	ldrb	r3, [r7, #7]
- 8000bfc:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000bfc:	2b00      	cmp	r3, #0
  8000bfe:	d102      	bne.n	8000c06 <ConfigurationLine3+0x122>
  8000c00:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8000c04:	e000      	b.n	8000c08 <ConfigurationLine3+0x124>
@@ -1284,7 +1282,7 @@ void ConfigurationLine3(char side)
 
 08000c28 <ConfigurationLine4>:
 
-void ConfigurationLine4(char side)
+void ConfigurationLine4(KeypadSide side)
 {
  8000c28:	b580      	push	{r7, lr}
  8000c2a:	b08a      	sub	sp, #40	; 0x28
@@ -1293,8 +1291,7 @@ void ConfigurationLine4(char side)
  8000c30:	71fb      	strb	r3, [r7, #7]
 	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* GPIOC and GPIOD Periph clock enable */
-	__HAL_RCC_GPIOB_CLK_ENABLE(); //RCC_APB2PeriphClockCmd(RCC_KEY_GPIO, ENABLE);
+	__HAL_RCC_GPIOB_CLK_ENABLE();
  8000c32:	2300      	movs	r3, #0
  8000c34:	613b      	str	r3, [r7, #16]
  8000c36:	4b4e      	ldr	r3, [pc, #312]	; (8000d70 <ConfigurationLine4+0x148>)
@@ -1324,27 +1321,27 @@ void ConfigurationLine4(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side) | IO_KEY_4(side);
  8000c6a:	79fb      	ldrb	r3, [r7, #7]
- 8000c6c:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000c6c:	2b00      	cmp	r3, #0
  8000c6e:	d102      	bne.n	8000c76 <ConfigurationLine4+0x4e>
  8000c70:	f44f 4200 	mov.w	r2, #32768	; 0x8000
  8000c74:	e000      	b.n	8000c78 <ConfigurationLine4+0x50>
  8000c76:	2240      	movs	r2, #64	; 0x40
  8000c78:	79fb      	ldrb	r3, [r7, #7]
- 8000c7a:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000c7a:	2b00      	cmp	r3, #0
  8000c7c:	d102      	bne.n	8000c84 <ConfigurationLine4+0x5c>
  8000c7e:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000c82:	e000      	b.n	8000c86 <ConfigurationLine4+0x5e>
  8000c84:	2308      	movs	r3, #8
  8000c86:	4313      	orrs	r3, r2
  8000c88:	79fa      	ldrb	r2, [r7, #7]
- 8000c8a:	2a4c      	cmp	r2, #76	; 0x4c
+ 8000c8a:	2a00      	cmp	r2, #0
  8000c8c:	d102      	bne.n	8000c94 <ConfigurationLine4+0x6c>
  8000c8e:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000c92:	e000      	b.n	8000c96 <ConfigurationLine4+0x6e>
  8000c94:	2204      	movs	r2, #4
  8000c96:	4313      	orrs	r3, r2
  8000c98:	79fa      	ldrb	r2, [r7, #7]
- 8000c9a:	2a4c      	cmp	r2, #76	; 0x4c
+ 8000c9a:	2a00      	cmp	r2, #0
  8000c9c:	d102      	bne.n	8000ca4 <ConfigurationLine4+0x7c>
  8000c9e:	f44f 5280 	mov.w	r2, #4096	; 0x1000
  8000ca2:	e000      	b.n	8000ca6 <ConfigurationLine4+0x7e>
@@ -1359,7 +1356,7 @@ void ConfigurationLine4(char side)
  8000cb0:	61bb      	str	r3, [r7, #24]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000cb2:	79fb      	ldrb	r3, [r7, #7]
- 8000cb4:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000cb4:	2b00      	cmp	r3, #0
  8000cb6:	d101      	bne.n	8000cbc <ConfigurationLine4+0x94>
  8000cb8:	4b2e      	ldr	r3, [pc, #184]	; (8000d74 <ConfigurationLine4+0x14c>)
  8000cba:	e000      	b.n	8000cbe <ConfigurationLine4+0x96>
@@ -1371,7 +1368,7 @@ void ConfigurationLine4(char side)
 
   GPIO_InitStructure.Pin = IO_KEY_5(side);
  8000cca:	79fb      	ldrb	r3, [r7, #7]
- 8000ccc:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ccc:	2b00      	cmp	r3, #0
  8000cce:	d102      	bne.n	8000cd6 <ConfigurationLine4+0xae>
  8000cd0:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8000cd4:	e000      	b.n	8000cd8 <ConfigurationLine4+0xb0>
@@ -1388,7 +1385,7 @@ void ConfigurationLine4(char side)
  8000ce4:	61fb      	str	r3, [r7, #28]
   HAL_GPIO_Init(IO_KEY_GPIO(side), &GPIO_InitStructure);
  8000ce6:	79fb      	ldrb	r3, [r7, #7]
- 8000ce8:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ce8:	2b00      	cmp	r3, #0
  8000cea:	d101      	bne.n	8000cf0 <ConfigurationLine4+0xc8>
  8000cec:	4b21      	ldr	r3, [pc, #132]	; (8000d74 <ConfigurationLine4+0x14c>)
  8000cee:	e000      	b.n	8000cf2 <ConfigurationLine4+0xca>
@@ -1398,21 +1395,21 @@ void ConfigurationLine4(char side)
  8000cf8:	4618      	mov	r0, r3
  8000cfa:	f001 fb77 	bl	80023ec <HAL_GPIO_Init>
 
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET); 	//GPIO_ResetBits(IO_KEY_GPIO, IO_KEY_1 | IO_KEY_2 | IO_KEY_3);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET);
  8000cfe:	79fb      	ldrb	r3, [r7, #7]
- 8000d00:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d00:	2b00      	cmp	r3, #0
  8000d02:	d101      	bne.n	8000d08 <ConfigurationLine4+0xe0>
  8000d04:	481b      	ldr	r0, [pc, #108]	; (8000d74 <ConfigurationLine4+0x14c>)
  8000d06:	e000      	b.n	8000d0a <ConfigurationLine4+0xe2>
  8000d08:	481b      	ldr	r0, [pc, #108]	; (8000d78 <ConfigurationLine4+0x150>)
  8000d0a:	79fb      	ldrb	r3, [r7, #7]
- 8000d0c:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d0c:	2b00      	cmp	r3, #0
  8000d0e:	d101      	bne.n	8000d14 <ConfigurationLine4+0xec>
  8000d10:	4a1a      	ldr	r2, [pc, #104]	; (8000d7c <ConfigurationLine4+0x154>)
  8000d12:	e000      	b.n	8000d16 <ConfigurationLine4+0xee>
  8000d14:	2240      	movs	r2, #64	; 0x40
  8000d16:	79fb      	ldrb	r3, [r7, #7]
- 8000d18:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d18:	2b00      	cmp	r3, #0
  8000d1a:	d102      	bne.n	8000d22 <ConfigurationLine4+0xfa>
  8000d1c:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000d20:	e000      	b.n	8000d24 <ConfigurationLine4+0xfc>
@@ -1420,7 +1417,7 @@ void ConfigurationLine4(char side)
  8000d24:	4313      	orrs	r3, r2
  8000d26:	b21b      	sxth	r3, r3
  8000d28:	79fa      	ldrb	r2, [r7, #7]
- 8000d2a:	2a4c      	cmp	r2, #76	; 0x4c
+ 8000d2a:	2a00      	cmp	r2, #0
  8000d2c:	d102      	bne.n	8000d34 <ConfigurationLine4+0x10c>
  8000d2e:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000d32:	e000      	b.n	8000d36 <ConfigurationLine4+0x10e>
@@ -1431,15 +1428,15 @@ void ConfigurationLine4(char side)
  8000d3c:	2200      	movs	r2, #0
  8000d3e:	4619      	mov	r1, r3
  8000d40:	f001 fd06 	bl	8002750 <HAL_GPIO_WritePin>
-  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET); 							//GPIO_SetBits(IO_KEY_GPIO, IO_KEY_4);
+  HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET);
  8000d44:	79fb      	ldrb	r3, [r7, #7]
- 8000d46:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d46:	2b00      	cmp	r3, #0
  8000d48:	d101      	bne.n	8000d4e <ConfigurationLine4+0x126>
  8000d4a:	480a      	ldr	r0, [pc, #40]	; (8000d74 <ConfigurationLine4+0x14c>)
  8000d4c:	e000      	b.n	8000d50 <ConfigurationLine4+0x128>
  8000d4e:	480a      	ldr	r0, [pc, #40]	; (8000d78 <ConfigurationLine4+0x150>)
  8000d50:	79fb      	ldrb	r3, [r7, #7]
- 8000d52:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d52:	2b00      	cmp	r3, #0
  8000d54:	d102      	bne.n	8000d5c <ConfigurationLine4+0x134>
  8000d56:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8000d5a:	e000      	b.n	8000d5e <ConfigurationLine4+0x136>
@@ -1461,7 +1458,7 @@ void ConfigurationLine4(char side)
 
 08000d80 <GndScanStart>:
 
-void GndScanStart(char side)
+void GndScanStart(KeypadSide side)
 {
  8000d80:	b580      	push	{r7, lr}
  8000d82:	b084      	sub	sp, #16
@@ -1472,9 +1469,9 @@ void GndScanStart(char side)
  8000d8a:	79fb      	ldrb	r3, [r7, #7]
  8000d8c:	4618      	mov	r0, r3
  8000d8e:	f7ff fd25 	bl	80007dc <ConfigurationGnd>
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8000d92:	79fb      	ldrb	r3, [r7, #7]
- 8000d94:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000d94:	2b00      	cmp	r3, #0
  8000d96:	d101      	bne.n	8000d9c <GndScanStart+0x1c>
  8000d98:	4b39      	ldr	r3, [pc, #228]	; (8000e80 <GndScanStart+0x100>)
  8000d9a:	e000      	b.n	8000d9e <GndScanStart+0x1e>
@@ -1483,13 +1480,13 @@ void GndScanStart(char side)
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
  8000da0:	79fb      	ldrb	r3, [r7, #7]
- 8000da2:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000da2:	2b00      	cmp	r3, #0
  8000da4:	d101      	bne.n	8000daa <GndScanStart+0x2a>
  8000da6:	4a38      	ldr	r2, [pc, #224]	; (8000e88 <GndScanStart+0x108>)
  8000da8:	e000      	b.n	8000dac <GndScanStart+0x2c>
  8000daa:	4a38      	ldr	r2, [pc, #224]	; (8000e8c <GndScanStart+0x10c>)
  8000dac:	79fb      	ldrb	r3, [r7, #7]
- 8000dae:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000dae:	2b00      	cmp	r3, #0
  8000db0:	d102      	bne.n	8000db8 <GndScanStart+0x38>
  8000db2:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  8000db6:	e000      	b.n	8000dba <GndScanStart+0x3a>
@@ -1501,13 +1498,13 @@ void GndScanStart(char side)
  8000dc4:	2b00      	cmp	r3, #0
  8000dc6:	d04f      	beq.n	8000e68 <GndScanStart+0xe8>
  8000dc8:	79fb      	ldrb	r3, [r7, #7]
- 8000dca:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000dca:	2b00      	cmp	r3, #0
  8000dcc:	d101      	bne.n	8000dd2 <GndScanStart+0x52>
  8000dce:	4a2e      	ldr	r2, [pc, #184]	; (8000e88 <GndScanStart+0x108>)
  8000dd0:	e000      	b.n	8000dd4 <GndScanStart+0x54>
  8000dd2:	4a2e      	ldr	r2, [pc, #184]	; (8000e8c <GndScanStart+0x10c>)
  8000dd4:	79fb      	ldrb	r3, [r7, #7]
- 8000dd6:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000dd6:	2b00      	cmp	r3, #0
  8000dd8:	d102      	bne.n	8000de0 <GndScanStart+0x60>
  8000dda:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000dde:	e000      	b.n	8000de2 <GndScanStart+0x62>
@@ -1519,13 +1516,13 @@ void GndScanStart(char side)
  8000dec:	2b00      	cmp	r3, #0
  8000dee:	d03b      	beq.n	8000e68 <GndScanStart+0xe8>
  8000df0:	79fb      	ldrb	r3, [r7, #7]
- 8000df2:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000df2:	2b00      	cmp	r3, #0
  8000df4:	d101      	bne.n	8000dfa <GndScanStart+0x7a>
  8000df6:	4a24      	ldr	r2, [pc, #144]	; (8000e88 <GndScanStart+0x108>)
  8000df8:	e000      	b.n	8000dfc <GndScanStart+0x7c>
  8000dfa:	4a24      	ldr	r2, [pc, #144]	; (8000e8c <GndScanStart+0x10c>)
  8000dfc:	79fb      	ldrb	r3, [r7, #7]
- 8000dfe:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000dfe:	2b00      	cmp	r3, #0
  8000e00:	d102      	bne.n	8000e08 <GndScanStart+0x88>
  8000e02:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8000e06:	e000      	b.n	8000e0a <GndScanStart+0x8a>
@@ -1537,13 +1534,13 @@ void GndScanStart(char side)
  8000e14:	2b00      	cmp	r3, #0
  8000e16:	d027      	beq.n	8000e68 <GndScanStart+0xe8>
  8000e18:	79fb      	ldrb	r3, [r7, #7]
- 8000e1a:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000e1a:	2b00      	cmp	r3, #0
  8000e1c:	d101      	bne.n	8000e22 <GndScanStart+0xa2>
  8000e1e:	4a1a      	ldr	r2, [pc, #104]	; (8000e88 <GndScanStart+0x108>)
  8000e20:	e000      	b.n	8000e24 <GndScanStart+0xa4>
  8000e22:	4a1a      	ldr	r2, [pc, #104]	; (8000e8c <GndScanStart+0x10c>)
  8000e24:	79fb      	ldrb	r3, [r7, #7]
- 8000e26:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000e26:	2b00      	cmp	r3, #0
  8000e28:	d102      	bne.n	8000e30 <GndScanStart+0xb0>
  8000e2a:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8000e2e:	e000      	b.n	8000e32 <GndScanStart+0xb2>
@@ -1555,13 +1552,13 @@ void GndScanStart(char side)
  8000e3c:	2b00      	cmp	r3, #0
  8000e3e:	d013      	beq.n	8000e68 <GndScanStart+0xe8>
  8000e40:	79fb      	ldrb	r3, [r7, #7]
- 8000e42:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000e42:	2b00      	cmp	r3, #0
  8000e44:	d101      	bne.n	8000e4a <GndScanStart+0xca>
  8000e46:	4a10      	ldr	r2, [pc, #64]	; (8000e88 <GndScanStart+0x108>)
  8000e48:	e000      	b.n	8000e4c <GndScanStart+0xcc>
  8000e4a:	4a10      	ldr	r2, [pc, #64]	; (8000e8c <GndScanStart+0x10c>)
  8000e4c:	79fb      	ldrb	r3, [r7, #7]
- 8000e4e:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000e4e:	2b00      	cmp	r3, #0
  8000e50:	d102      	bne.n	8000e58 <GndScanStart+0xd8>
  8000e52:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8000e56:	e000      	b.n	8000e5a <GndScanStart+0xda>
@@ -1599,7 +1596,7 @@ void GndScanStart(char side)
 
 08000e90 <GndScanDetection>:
 
-uint32_t GndScanDetection(char side)
+uint32_t GndScanDetection(KeypadSide side)
 {
  8000e90:	b580      	push	{r7, lr}
  8000e92:	b084      	sub	sp, #16
@@ -1607,9 +1604,9 @@ uint32_t GndScanDetection(char side)
  8000e96:	4603      	mov	r3, r0
  8000e98:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8000e9a:	79fb      	ldrb	r3, [r7, #7]
- 8000e9c:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000e9c:	2b00      	cmp	r3, #0
  8000e9e:	d101      	bne.n	8000ea4 <GndScanDetection+0x14>
  8000ea0:	4b7e      	ldr	r3, [pc, #504]	; (800109c <GndScanDetection+0x20c>)
  8000ea2:	e000      	b.n	8000ea6 <GndScanDetection+0x16>
@@ -1618,13 +1615,13 @@ uint32_t GndScanDetection(char side)
 
 	if((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0))
  8000ea8:	79fb      	ldrb	r3, [r7, #7]
- 8000eaa:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000eaa:	2b00      	cmp	r3, #0
  8000eac:	d101      	bne.n	8000eb2 <GndScanDetection+0x22>
  8000eae:	4a7d      	ldr	r2, [pc, #500]	; (80010a4 <GndScanDetection+0x214>)
  8000eb0:	e000      	b.n	8000eb4 <GndScanDetection+0x24>
  8000eb2:	4a7d      	ldr	r2, [pc, #500]	; (80010a8 <GndScanDetection+0x218>)
  8000eb4:	79fb      	ldrb	r3, [r7, #7]
- 8000eb6:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000eb6:	2b00      	cmp	r3, #0
  8000eb8:	d102      	bne.n	8000ec0 <GndScanDetection+0x30>
  8000eba:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  8000ebe:	e000      	b.n	8000ec2 <GndScanDetection+0x32>
@@ -1636,13 +1633,13 @@ uint32_t GndScanDetection(char side)
  8000ecc:	2b00      	cmp	r3, #0
  8000ece:	d050      	beq.n	8000f72 <GndScanDetection+0xe2>
  8000ed0:	79fb      	ldrb	r3, [r7, #7]
- 8000ed2:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ed2:	2b00      	cmp	r3, #0
  8000ed4:	d101      	bne.n	8000eda <GndScanDetection+0x4a>
  8000ed6:	4a73      	ldr	r2, [pc, #460]	; (80010a4 <GndScanDetection+0x214>)
  8000ed8:	e000      	b.n	8000edc <GndScanDetection+0x4c>
  8000eda:	4a73      	ldr	r2, [pc, #460]	; (80010a8 <GndScanDetection+0x218>)
  8000edc:	79fb      	ldrb	r3, [r7, #7]
- 8000ede:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ede:	2b00      	cmp	r3, #0
  8000ee0:	d102      	bne.n	8000ee8 <GndScanDetection+0x58>
  8000ee2:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000ee6:	e000      	b.n	8000eea <GndScanDetection+0x5a>
@@ -1654,13 +1651,13 @@ uint32_t GndScanDetection(char side)
  8000ef4:	2b00      	cmp	r3, #0
  8000ef6:	d03c      	beq.n	8000f72 <GndScanDetection+0xe2>
  8000ef8:	79fb      	ldrb	r3, [r7, #7]
- 8000efa:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000efa:	2b00      	cmp	r3, #0
  8000efc:	d101      	bne.n	8000f02 <GndScanDetection+0x72>
  8000efe:	4a69      	ldr	r2, [pc, #420]	; (80010a4 <GndScanDetection+0x214>)
  8000f00:	e000      	b.n	8000f04 <GndScanDetection+0x74>
  8000f02:	4a69      	ldr	r2, [pc, #420]	; (80010a8 <GndScanDetection+0x218>)
  8000f04:	79fb      	ldrb	r3, [r7, #7]
- 8000f06:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f06:	2b00      	cmp	r3, #0
  8000f08:	d102      	bne.n	8000f10 <GndScanDetection+0x80>
  8000f0a:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8000f0e:	e000      	b.n	8000f12 <GndScanDetection+0x82>
@@ -1672,13 +1669,13 @@ uint32_t GndScanDetection(char side)
  8000f1c:	2b00      	cmp	r3, #0
  8000f1e:	d028      	beq.n	8000f72 <GndScanDetection+0xe2>
  8000f20:	79fb      	ldrb	r3, [r7, #7]
- 8000f22:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f22:	2b00      	cmp	r3, #0
  8000f24:	d101      	bne.n	8000f2a <GndScanDetection+0x9a>
  8000f26:	4a5f      	ldr	r2, [pc, #380]	; (80010a4 <GndScanDetection+0x214>)
  8000f28:	e000      	b.n	8000f2c <GndScanDetection+0x9c>
  8000f2a:	4a5f      	ldr	r2, [pc, #380]	; (80010a8 <GndScanDetection+0x218>)
  8000f2c:	79fb      	ldrb	r3, [r7, #7]
- 8000f2e:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f2e:	2b00      	cmp	r3, #0
  8000f30:	d102      	bne.n	8000f38 <GndScanDetection+0xa8>
  8000f32:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8000f36:	e000      	b.n	8000f3a <GndScanDetection+0xaa>
@@ -1690,13 +1687,13 @@ uint32_t GndScanDetection(char side)
  8000f44:	2b00      	cmp	r3, #0
  8000f46:	d014      	beq.n	8000f72 <GndScanDetection+0xe2>
  8000f48:	79fb      	ldrb	r3, [r7, #7]
- 8000f4a:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f4a:	2b00      	cmp	r3, #0
  8000f4c:	d101      	bne.n	8000f52 <GndScanDetection+0xc2>
  8000f4e:	4a55      	ldr	r2, [pc, #340]	; (80010a4 <GndScanDetection+0x214>)
  8000f50:	e000      	b.n	8000f54 <GndScanDetection+0xc4>
  8000f52:	4a55      	ldr	r2, [pc, #340]	; (80010a8 <GndScanDetection+0x218>)
  8000f54:	79fb      	ldrb	r3, [r7, #7]
- 8000f56:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f56:	2b00      	cmp	r3, #0
  8000f58:	d102      	bne.n	8000f60 <GndScanDetection+0xd0>
  8000f5a:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8000f5e:	e000      	b.n	8000f62 <GndScanDetection+0xd2>
@@ -1710,13 +1707,13 @@ uint32_t GndScanDetection(char side)
 	{
 		if(GET_IO_KEY_1(side) == 0)
  8000f72:	79fb      	ldrb	r3, [r7, #7]
- 8000f74:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f74:	2b00      	cmp	r3, #0
  8000f76:	d101      	bne.n	8000f7c <GndScanDetection+0xec>
  8000f78:	4a4a      	ldr	r2, [pc, #296]	; (80010a4 <GndScanDetection+0x214>)
  8000f7a:	e000      	b.n	8000f7e <GndScanDetection+0xee>
  8000f7c:	4a4a      	ldr	r2, [pc, #296]	; (80010a8 <GndScanDetection+0x218>)
  8000f7e:	79fb      	ldrb	r3, [r7, #7]
- 8000f80:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f80:	2b00      	cmp	r3, #0
  8000f82:	d102      	bne.n	8000f8a <GndScanDetection+0xfa>
  8000f84:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  8000f88:	e000      	b.n	8000f8c <GndScanDetection+0xfc>
@@ -1728,9 +1725,9 @@ uint32_t GndScanDetection(char side)
  8000f96:	2b00      	cmp	r3, #0
  8000f98:	d107      	bne.n	8000faa <GndScanDetection+0x11a>
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_LEFT : KEY_VALUE_LEFT);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_LEFT : KEY_VALUE_LEFT);
  8000f9a:	79fb      	ldrb	r3, [r7, #7]
- 8000f9c:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000f9c:	2b00      	cmp	r3, #0
  8000f9e:	d101      	bne.n	8000fa4 <GndScanDetection+0x114>
  8000fa0:	2305      	movs	r3, #5
  8000fa2:	e000      	b.n	8000fa6 <GndScanDetection+0x116>
@@ -1740,13 +1737,13 @@ uint32_t GndScanDetection(char side)
 		}
 		else if((GET_IO_KEY_2(side) == 0))
  8000faa:	79fb      	ldrb	r3, [r7, #7]
- 8000fac:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000fac:	2b00      	cmp	r3, #0
  8000fae:	d101      	bne.n	8000fb4 <GndScanDetection+0x124>
  8000fb0:	4a3c      	ldr	r2, [pc, #240]	; (80010a4 <GndScanDetection+0x214>)
  8000fb2:	e000      	b.n	8000fb6 <GndScanDetection+0x126>
  8000fb4:	4a3c      	ldr	r2, [pc, #240]	; (80010a8 <GndScanDetection+0x218>)
  8000fb6:	79fb      	ldrb	r3, [r7, #7]
- 8000fb8:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000fb8:	2b00      	cmp	r3, #0
  8000fba:	d102      	bne.n	8000fc2 <GndScanDetection+0x132>
  8000fbc:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8000fc0:	e000      	b.n	8000fc4 <GndScanDetection+0x134>
@@ -1758,9 +1755,9 @@ uint32_t GndScanDetection(char side)
  8000fce:	2b00      	cmp	r3, #0
  8000fd0:	d107      	bne.n	8000fe2 <GndScanDetection+0x152>
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_UP : KEY_VALUE_UP);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_UP : KEY_VALUE_UP);
  8000fd2:	79fb      	ldrb	r3, [r7, #7]
- 8000fd4:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000fd4:	2b00      	cmp	r3, #0
  8000fd6:	d101      	bne.n	8000fdc <GndScanDetection+0x14c>
  8000fd8:	2304      	movs	r3, #4
  8000fda:	e000      	b.n	8000fde <GndScanDetection+0x14e>
@@ -1770,13 +1767,13 @@ uint32_t GndScanDetection(char side)
 		}
 		else if((GET_IO_KEY_3(side) == 0))
  8000fe2:	79fb      	ldrb	r3, [r7, #7]
- 8000fe4:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000fe4:	2b00      	cmp	r3, #0
  8000fe6:	d101      	bne.n	8000fec <GndScanDetection+0x15c>
  8000fe8:	4a2e      	ldr	r2, [pc, #184]	; (80010a4 <GndScanDetection+0x214>)
  8000fea:	e000      	b.n	8000fee <GndScanDetection+0x15e>
  8000fec:	4a2e      	ldr	r2, [pc, #184]	; (80010a8 <GndScanDetection+0x218>)
  8000fee:	79fb      	ldrb	r3, [r7, #7]
- 8000ff0:	2b4c      	cmp	r3, #76	; 0x4c
+ 8000ff0:	2b00      	cmp	r3, #0
  8000ff2:	d102      	bne.n	8000ffa <GndScanDetection+0x16a>
  8000ff4:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8000ff8:	e000      	b.n	8000ffc <GndScanDetection+0x16c>
@@ -1795,13 +1792,13 @@ uint32_t GndScanDetection(char side)
 		}
 		else if((GET_IO_KEY_4(side) == 0))
  8001010:	79fb      	ldrb	r3, [r7, #7]
- 8001012:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001012:	2b00      	cmp	r3, #0
  8001014:	d101      	bne.n	800101a <GndScanDetection+0x18a>
  8001016:	4a23      	ldr	r2, [pc, #140]	; (80010a4 <GndScanDetection+0x214>)
  8001018:	e000      	b.n	800101c <GndScanDetection+0x18c>
  800101a:	4a23      	ldr	r2, [pc, #140]	; (80010a8 <GndScanDetection+0x218>)
  800101c:	79fb      	ldrb	r3, [r7, #7]
- 800101e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800101e:	2b00      	cmp	r3, #0
  8001020:	d102      	bne.n	8001028 <GndScanDetection+0x198>
  8001022:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001026:	e000      	b.n	800102a <GndScanDetection+0x19a>
@@ -1813,9 +1810,9 @@ uint32_t GndScanDetection(char side)
  8001034:	2b00      	cmp	r3, #0
  8001036:	d107      	bne.n	8001048 <GndScanDetection+0x1b8>
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_DOWN : KEY_VALUE_DOWN);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_DOWN : KEY_VALUE_DOWN);
  8001038:	79fb      	ldrb	r3, [r7, #7]
- 800103a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800103a:	2b00      	cmp	r3, #0
  800103c:	d101      	bne.n	8001042 <GndScanDetection+0x1b2>
  800103e:	2302      	movs	r3, #2
  8001040:	e000      	b.n	8001044 <GndScanDetection+0x1b4>
@@ -1825,13 +1822,13 @@ uint32_t GndScanDetection(char side)
 		}
 		else if((GET_IO_KEY_5(side) == 0))
  8001048:	79fb      	ldrb	r3, [r7, #7]
- 800104a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800104a:	2b00      	cmp	r3, #0
  800104c:	d101      	bne.n	8001052 <GndScanDetection+0x1c2>
  800104e:	4a15      	ldr	r2, [pc, #84]	; (80010a4 <GndScanDetection+0x214>)
  8001050:	e000      	b.n	8001054 <GndScanDetection+0x1c4>
  8001052:	4a15      	ldr	r2, [pc, #84]	; (80010a8 <GndScanDetection+0x218>)
  8001054:	79fb      	ldrb	r3, [r7, #7]
- 8001056:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001056:	2b00      	cmp	r3, #0
  8001058:	d102      	bne.n	8001060 <GndScanDetection+0x1d0>
  800105a:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800105e:	e000      	b.n	8001062 <GndScanDetection+0x1d2>
@@ -1843,9 +1840,9 @@ uint32_t GndScanDetection(char side)
  800106c:	2b00      	cmp	r3, #0
  800106e:	d106      	bne.n	800107e <GndScanDetection+0x1ee>
 		{
-			ReValue = (side == 'L' ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
+			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
  8001070:	79fb      	ldrb	r3, [r7, #7]
- 8001072:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001072:	2b00      	cmp	r3, #0
  8001074:	d101      	bne.n	800107a <GndScanDetection+0x1ea>
  8001076:	2301      	movs	r3, #1
  8001078:	e000      	b.n	800107c <GndScanDetection+0x1ec>
@@ -1885,16 +1882,16 @@ uint32_t GndScanDetection(char side)
 
 080010ac <GndScanOver>:
 	
-void GndScanOver(char side)
+void GndScanOver(KeypadSide side)
 {
  80010ac:	b580      	push	{r7, lr}
  80010ae:	b084      	sub	sp, #16
  80010b0:	af00      	add	r7, sp, #0
  80010b2:	4603      	mov	r3, r0
  80010b4:	71fb      	strb	r3, [r7, #7]
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  80010b6:	79fb      	ldrb	r3, [r7, #7]
- 80010b8:	2b4c      	cmp	r3, #76	; 0x4c
+ 80010b8:	2b00      	cmp	r3, #0
  80010ba:	d101      	bne.n	80010c0 <GndScanOver+0x14>
  80010bc:	4b39      	ldr	r3, [pc, #228]	; (80011a4 <GndScanOver+0xf8>)
  80010be:	e000      	b.n	80010c2 <GndScanOver+0x16>
@@ -1903,13 +1900,13 @@ void GndScanOver(char side)
 
 	if(((GET_IO_KEY_1(side) == 0)||(GET_IO_KEY_2(side) == 0)||(GET_IO_KEY_3(side) == 0)||(GET_IO_KEY_4(side) == 0)||(GET_IO_KEY_5(side) == 0)))
  80010c4:	79fb      	ldrb	r3, [r7, #7]
- 80010c6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80010c6:	2b00      	cmp	r3, #0
  80010c8:	d101      	bne.n	80010ce <GndScanOver+0x22>
  80010ca:	4a38      	ldr	r2, [pc, #224]	; (80011ac <GndScanOver+0x100>)
  80010cc:	e000      	b.n	80010d0 <GndScanOver+0x24>
  80010ce:	4a38      	ldr	r2, [pc, #224]	; (80011b0 <GndScanOver+0x104>)
  80010d0:	79fb      	ldrb	r3, [r7, #7]
- 80010d2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80010d2:	2b00      	cmp	r3, #0
  80010d4:	d102      	bne.n	80010dc <GndScanOver+0x30>
  80010d6:	f44f 4300 	mov.w	r3, #32768	; 0x8000
  80010da:	e000      	b.n	80010de <GndScanOver+0x32>
@@ -1921,13 +1918,13 @@ void GndScanOver(char side)
  80010e8:	2b00      	cmp	r3, #0
  80010ea:	d04f      	beq.n	800118c <GndScanOver+0xe0>
  80010ec:	79fb      	ldrb	r3, [r7, #7]
- 80010ee:	2b4c      	cmp	r3, #76	; 0x4c
+ 80010ee:	2b00      	cmp	r3, #0
  80010f0:	d101      	bne.n	80010f6 <GndScanOver+0x4a>
  80010f2:	4a2e      	ldr	r2, [pc, #184]	; (80011ac <GndScanOver+0x100>)
  80010f4:	e000      	b.n	80010f8 <GndScanOver+0x4c>
  80010f6:	4a2e      	ldr	r2, [pc, #184]	; (80011b0 <GndScanOver+0x104>)
  80010f8:	79fb      	ldrb	r3, [r7, #7]
- 80010fa:	2b4c      	cmp	r3, #76	; 0x4c
+ 80010fa:	2b00      	cmp	r3, #0
  80010fc:	d102      	bne.n	8001104 <GndScanOver+0x58>
  80010fe:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8001102:	e000      	b.n	8001106 <GndScanOver+0x5a>
@@ -1939,13 +1936,13 @@ void GndScanOver(char side)
  8001110:	2b00      	cmp	r3, #0
  8001112:	d03b      	beq.n	800118c <GndScanOver+0xe0>
  8001114:	79fb      	ldrb	r3, [r7, #7]
- 8001116:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001116:	2b00      	cmp	r3, #0
  8001118:	d101      	bne.n	800111e <GndScanOver+0x72>
  800111a:	4a24      	ldr	r2, [pc, #144]	; (80011ac <GndScanOver+0x100>)
  800111c:	e000      	b.n	8001120 <GndScanOver+0x74>
  800111e:	4a24      	ldr	r2, [pc, #144]	; (80011b0 <GndScanOver+0x104>)
  8001120:	79fb      	ldrb	r3, [r7, #7]
- 8001122:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001122:	2b00      	cmp	r3, #0
  8001124:	d102      	bne.n	800112c <GndScanOver+0x80>
  8001126:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  800112a:	e000      	b.n	800112e <GndScanOver+0x82>
@@ -1957,13 +1954,13 @@ void GndScanOver(char side)
  8001138:	2b00      	cmp	r3, #0
  800113a:	d027      	beq.n	800118c <GndScanOver+0xe0>
  800113c:	79fb      	ldrb	r3, [r7, #7]
- 800113e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800113e:	2b00      	cmp	r3, #0
  8001140:	d101      	bne.n	8001146 <GndScanOver+0x9a>
  8001142:	4a1a      	ldr	r2, [pc, #104]	; (80011ac <GndScanOver+0x100>)
  8001144:	e000      	b.n	8001148 <GndScanOver+0x9c>
  8001146:	4a1a      	ldr	r2, [pc, #104]	; (80011b0 <GndScanOver+0x104>)
  8001148:	79fb      	ldrb	r3, [r7, #7]
- 800114a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800114a:	2b00      	cmp	r3, #0
  800114c:	d102      	bne.n	8001154 <GndScanOver+0xa8>
  800114e:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001152:	e000      	b.n	8001156 <GndScanOver+0xaa>
@@ -1975,13 +1972,13 @@ void GndScanOver(char side)
  8001160:	2b00      	cmp	r3, #0
  8001162:	d013      	beq.n	800118c <GndScanOver+0xe0>
  8001164:	79fb      	ldrb	r3, [r7, #7]
- 8001166:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001166:	2b00      	cmp	r3, #0
  8001168:	d101      	bne.n	800116e <GndScanOver+0xc2>
  800116a:	4a10      	ldr	r2, [pc, #64]	; (80011ac <GndScanOver+0x100>)
  800116c:	e000      	b.n	8001170 <GndScanOver+0xc4>
  800116e:	4a10      	ldr	r2, [pc, #64]	; (80011b0 <GndScanOver+0x104>)
  8001170:	79fb      	ldrb	r3, [r7, #7]
- 8001172:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001172:	2b00      	cmp	r3, #0
  8001174:	d102      	bne.n	800117c <GndScanOver+0xd0>
  8001176:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800117a:	e000      	b.n	800117e <GndScanOver+0xd2>
@@ -2019,7 +2016,7 @@ void GndScanOver(char side)
 
 080011b4 <Line1ScanStart>:
 /* Scan line 1 */
-void Line1ScanStart(char side)
+void Line1ScanStart(KeypadSide side)
 {
  80011b4:	b580      	push	{r7, lr}
  80011b6:	b084      	sub	sp, #16
@@ -2030,9 +2027,9 @@ void Line1ScanStart(char side)
  80011be:	79fb      	ldrb	r3, [r7, #7]
  80011c0:	4618      	mov	r0, r3
  80011c2:	f7ff fb71 	bl	80008a8 <ConfigurationLine1>
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  80011c6:	79fb      	ldrb	r3, [r7, #7]
- 80011c8:	2b4c      	cmp	r3, #76	; 0x4c
+ 80011c8:	2b00      	cmp	r3, #0
  80011ca:	d101      	bne.n	80011d0 <Line1ScanStart+0x1c>
  80011cc:	4b57      	ldr	r3, [pc, #348]	; (800132c <Line1ScanStart+0x178>)
  80011ce:	e000      	b.n	80011d2 <Line1ScanStart+0x1e>
@@ -2041,13 +2038,13 @@ void Line1ScanStart(char side)
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
  80011d4:	79fb      	ldrb	r3, [r7, #7]
- 80011d6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80011d6:	2b00      	cmp	r3, #0
  80011d8:	d101      	bne.n	80011de <Line1ScanStart+0x2a>
  80011da:	4a56      	ldr	r2, [pc, #344]	; (8001334 <Line1ScanStart+0x180>)
  80011dc:	e000      	b.n	80011e0 <Line1ScanStart+0x2c>
  80011de:	4a56      	ldr	r2, [pc, #344]	; (8001338 <Line1ScanStart+0x184>)
  80011e0:	79fb      	ldrb	r3, [r7, #7]
- 80011e2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80011e2:	2b00      	cmp	r3, #0
  80011e4:	d102      	bne.n	80011ec <Line1ScanStart+0x38>
  80011e6:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  80011ea:	e000      	b.n	80011ee <Line1ScanStart+0x3a>
@@ -2059,13 +2056,13 @@ void Line1ScanStart(char side)
  80011f8:	2b01      	cmp	r3, #1
  80011fa:	d03b      	beq.n	8001274 <Line1ScanStart+0xc0>
  80011fc:	79fb      	ldrb	r3, [r7, #7]
- 80011fe:	2b4c      	cmp	r3, #76	; 0x4c
+ 80011fe:	2b00      	cmp	r3, #0
  8001200:	d101      	bne.n	8001206 <Line1ScanStart+0x52>
  8001202:	4a4c      	ldr	r2, [pc, #304]	; (8001334 <Line1ScanStart+0x180>)
  8001204:	e000      	b.n	8001208 <Line1ScanStart+0x54>
  8001206:	4a4c      	ldr	r2, [pc, #304]	; (8001338 <Line1ScanStart+0x184>)
  8001208:	79fb      	ldrb	r3, [r7, #7]
- 800120a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800120a:	2b00      	cmp	r3, #0
  800120c:	d102      	bne.n	8001214 <Line1ScanStart+0x60>
  800120e:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8001212:	e000      	b.n	8001216 <Line1ScanStart+0x62>
@@ -2077,13 +2074,13 @@ void Line1ScanStart(char side)
  8001220:	2b01      	cmp	r3, #1
  8001222:	d027      	beq.n	8001274 <Line1ScanStart+0xc0>
  8001224:	79fb      	ldrb	r3, [r7, #7]
- 8001226:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001226:	2b00      	cmp	r3, #0
  8001228:	d101      	bne.n	800122e <Line1ScanStart+0x7a>
  800122a:	4a42      	ldr	r2, [pc, #264]	; (8001334 <Line1ScanStart+0x180>)
  800122c:	e000      	b.n	8001230 <Line1ScanStart+0x7c>
  800122e:	4a42      	ldr	r2, [pc, #264]	; (8001338 <Line1ScanStart+0x184>)
  8001230:	79fb      	ldrb	r3, [r7, #7]
- 8001232:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001232:	2b00      	cmp	r3, #0
  8001234:	d102      	bne.n	800123c <Line1ScanStart+0x88>
  8001236:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  800123a:	e000      	b.n	800123e <Line1ScanStart+0x8a>
@@ -2095,13 +2092,13 @@ void Line1ScanStart(char side)
  8001248:	2b01      	cmp	r3, #1
  800124a:	d013      	beq.n	8001274 <Line1ScanStart+0xc0>
  800124c:	79fb      	ldrb	r3, [r7, #7]
- 800124e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800124e:	2b00      	cmp	r3, #0
  8001250:	d101      	bne.n	8001256 <Line1ScanStart+0xa2>
  8001252:	4a38      	ldr	r2, [pc, #224]	; (8001334 <Line1ScanStart+0x180>)
  8001254:	e000      	b.n	8001258 <Line1ScanStart+0xa4>
  8001256:	4a38      	ldr	r2, [pc, #224]	; (8001338 <Line1ScanStart+0x184>)
  8001258:	79fb      	ldrb	r3, [r7, #7]
- 800125a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800125a:	2b00      	cmp	r3, #0
  800125c:	d102      	bne.n	8001264 <Line1ScanStart+0xb0>
  800125e:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001262:	e000      	b.n	8001266 <Line1ScanStart+0xb2>
@@ -2126,13 +2123,13 @@ void Line1ScanStart(char side)
  800127a:	e052      	b.n	8001322 <Line1ScanStart+0x16e>
 	else if((!((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))))
  800127c:	79fb      	ldrb	r3, [r7, #7]
- 800127e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800127e:	2b00      	cmp	r3, #0
  8001280:	d101      	bne.n	8001286 <Line1ScanStart+0xd2>
  8001282:	4a2c      	ldr	r2, [pc, #176]	; (8001334 <Line1ScanStart+0x180>)
  8001284:	e000      	b.n	8001288 <Line1ScanStart+0xd4>
  8001286:	4a2c      	ldr	r2, [pc, #176]	; (8001338 <Line1ScanStart+0x184>)
  8001288:	79fb      	ldrb	r3, [r7, #7]
- 800128a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800128a:	2b00      	cmp	r3, #0
  800128c:	d102      	bne.n	8001294 <Line1ScanStart+0xe0>
  800128e:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8001292:	e000      	b.n	8001296 <Line1ScanStart+0xe2>
@@ -2144,13 +2141,13 @@ void Line1ScanStart(char side)
  80012a0:	2b01      	cmp	r3, #1
  80012a2:	d03e      	beq.n	8001322 <Line1ScanStart+0x16e>
  80012a4:	79fb      	ldrb	r3, [r7, #7]
- 80012a6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80012a6:	2b00      	cmp	r3, #0
  80012a8:	d101      	bne.n	80012ae <Line1ScanStart+0xfa>
  80012aa:	4a22      	ldr	r2, [pc, #136]	; (8001334 <Line1ScanStart+0x180>)
  80012ac:	e000      	b.n	80012b0 <Line1ScanStart+0xfc>
  80012ae:	4a22      	ldr	r2, [pc, #136]	; (8001338 <Line1ScanStart+0x184>)
  80012b0:	79fb      	ldrb	r3, [r7, #7]
- 80012b2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80012b2:	2b00      	cmp	r3, #0
  80012b4:	d102      	bne.n	80012bc <Line1ScanStart+0x108>
  80012b6:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  80012ba:	e000      	b.n	80012be <Line1ScanStart+0x10a>
@@ -2162,13 +2159,13 @@ void Line1ScanStart(char side)
  80012c8:	2b01      	cmp	r3, #1
  80012ca:	d02a      	beq.n	8001322 <Line1ScanStart+0x16e>
  80012cc:	79fb      	ldrb	r3, [r7, #7]
- 80012ce:	2b4c      	cmp	r3, #76	; 0x4c
+ 80012ce:	2b00      	cmp	r3, #0
  80012d0:	d101      	bne.n	80012d6 <Line1ScanStart+0x122>
  80012d2:	4a18      	ldr	r2, [pc, #96]	; (8001334 <Line1ScanStart+0x180>)
  80012d4:	e000      	b.n	80012d8 <Line1ScanStart+0x124>
  80012d6:	4a18      	ldr	r2, [pc, #96]	; (8001338 <Line1ScanStart+0x184>)
  80012d8:	79fb      	ldrb	r3, [r7, #7]
- 80012da:	2b4c      	cmp	r3, #76	; 0x4c
+ 80012da:	2b00      	cmp	r3, #0
  80012dc:	d102      	bne.n	80012e4 <Line1ScanStart+0x130>
  80012de:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  80012e2:	e000      	b.n	80012e6 <Line1ScanStart+0x132>
@@ -2180,13 +2177,13 @@ void Line1ScanStart(char side)
  80012f0:	2b01      	cmp	r3, #1
  80012f2:	d016      	beq.n	8001322 <Line1ScanStart+0x16e>
  80012f4:	79fb      	ldrb	r3, [r7, #7]
- 80012f6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80012f6:	2b00      	cmp	r3, #0
  80012f8:	d101      	bne.n	80012fe <Line1ScanStart+0x14a>
  80012fa:	4a0e      	ldr	r2, [pc, #56]	; (8001334 <Line1ScanStart+0x180>)
  80012fc:	e000      	b.n	8001300 <Line1ScanStart+0x14c>
  80012fe:	4a0e      	ldr	r2, [pc, #56]	; (8001338 <Line1ScanStart+0x184>)
  8001300:	79fb      	ldrb	r3, [r7, #7]
- 8001302:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001302:	2b00      	cmp	r3, #0
  8001304:	d102      	bne.n	800130c <Line1ScanStart+0x158>
  8001306:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800130a:	e000      	b.n	800130e <Line1ScanStart+0x15a>
@@ -2214,7 +2211,7 @@ void Line1ScanStart(char side)
 
 0800133c <Line1ScanDetection>:
 
-uint32_t Line1ScanDetection(char side)
+uint32_t Line1ScanDetection(KeypadSide side)
 {
  800133c:	b580      	push	{r7, lr}
  800133e:	b084      	sub	sp, #16
@@ -2222,9 +2219,9 @@ uint32_t Line1ScanDetection(char side)
  8001342:	4603      	mov	r3, r0
  8001344:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001346:	79fb      	ldrb	r3, [r7, #7]
- 8001348:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001348:	2b00      	cmp	r3, #0
  800134a:	d101      	bne.n	8001350 <Line1ScanDetection+0x14>
  800134c:	4b5e      	ldr	r3, [pc, #376]	; (80014c8 <Line1ScanDetection+0x18c>)
  800134e:	e000      	b.n	8001352 <Line1ScanDetection+0x16>
@@ -2233,13 +2230,13 @@ uint32_t Line1ScanDetection(char side)
 
 	if(((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1)))
  8001354:	79fb      	ldrb	r3, [r7, #7]
- 8001356:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001356:	2b00      	cmp	r3, #0
  8001358:	d101      	bne.n	800135e <Line1ScanDetection+0x22>
  800135a:	4a5d      	ldr	r2, [pc, #372]	; (80014d0 <Line1ScanDetection+0x194>)
  800135c:	e000      	b.n	8001360 <Line1ScanDetection+0x24>
  800135e:	4a5d      	ldr	r2, [pc, #372]	; (80014d4 <Line1ScanDetection+0x198>)
  8001360:	79fb      	ldrb	r3, [r7, #7]
- 8001362:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001362:	2b00      	cmp	r3, #0
  8001364:	d102      	bne.n	800136c <Line1ScanDetection+0x30>
  8001366:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  800136a:	e000      	b.n	800136e <Line1ScanDetection+0x32>
@@ -2251,13 +2248,13 @@ uint32_t Line1ScanDetection(char side)
  8001378:	2b01      	cmp	r3, #1
  800137a:	d03b      	beq.n	80013f4 <Line1ScanDetection+0xb8>
  800137c:	79fb      	ldrb	r3, [r7, #7]
- 800137e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800137e:	2b00      	cmp	r3, #0
  8001380:	d101      	bne.n	8001386 <Line1ScanDetection+0x4a>
  8001382:	4a53      	ldr	r2, [pc, #332]	; (80014d0 <Line1ScanDetection+0x194>)
  8001384:	e000      	b.n	8001388 <Line1ScanDetection+0x4c>
  8001386:	4a53      	ldr	r2, [pc, #332]	; (80014d4 <Line1ScanDetection+0x198>)
  8001388:	79fb      	ldrb	r3, [r7, #7]
- 800138a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800138a:	2b00      	cmp	r3, #0
  800138c:	d102      	bne.n	8001394 <Line1ScanDetection+0x58>
  800138e:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8001392:	e000      	b.n	8001396 <Line1ScanDetection+0x5a>
@@ -2269,13 +2266,13 @@ uint32_t Line1ScanDetection(char side)
  80013a0:	2b01      	cmp	r3, #1
  80013a2:	d027      	beq.n	80013f4 <Line1ScanDetection+0xb8>
  80013a4:	79fb      	ldrb	r3, [r7, #7]
- 80013a6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80013a6:	2b00      	cmp	r3, #0
  80013a8:	d101      	bne.n	80013ae <Line1ScanDetection+0x72>
  80013aa:	4a49      	ldr	r2, [pc, #292]	; (80014d0 <Line1ScanDetection+0x194>)
  80013ac:	e000      	b.n	80013b0 <Line1ScanDetection+0x74>
  80013ae:	4a49      	ldr	r2, [pc, #292]	; (80014d4 <Line1ScanDetection+0x198>)
  80013b0:	79fb      	ldrb	r3, [r7, #7]
- 80013b2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80013b2:	2b00      	cmp	r3, #0
  80013b4:	d102      	bne.n	80013bc <Line1ScanDetection+0x80>
  80013b6:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  80013ba:	e000      	b.n	80013be <Line1ScanDetection+0x82>
@@ -2287,13 +2284,13 @@ uint32_t Line1ScanDetection(char side)
  80013c8:	2b01      	cmp	r3, #1
  80013ca:	d013      	beq.n	80013f4 <Line1ScanDetection+0xb8>
  80013cc:	79fb      	ldrb	r3, [r7, #7]
- 80013ce:	2b4c      	cmp	r3, #76	; 0x4c
+ 80013ce:	2b00      	cmp	r3, #0
  80013d0:	d101      	bne.n	80013d6 <Line1ScanDetection+0x9a>
  80013d2:	4a3f      	ldr	r2, [pc, #252]	; (80014d0 <Line1ScanDetection+0x194>)
  80013d4:	e000      	b.n	80013d8 <Line1ScanDetection+0x9c>
  80013d6:	4a3f      	ldr	r2, [pc, #252]	; (80014d4 <Line1ScanDetection+0x198>)
  80013d8:	79fb      	ldrb	r3, [r7, #7]
- 80013da:	2b4c      	cmp	r3, #76	; 0x4c
+ 80013da:	2b00      	cmp	r3, #0
  80013dc:	d102      	bne.n	80013e4 <Line1ScanDetection+0xa8>
  80013de:	f44f 6300 	mov.w	r3, #2048	; 0x800
  80013e2:	e000      	b.n	80013e6 <Line1ScanDetection+0xaa>
@@ -2307,13 +2304,13 @@ uint32_t Line1ScanDetection(char side)
 	{
 		if(GET_IO_KEY_2(side) == 1)
  80013f4:	79fb      	ldrb	r3, [r7, #7]
- 80013f6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80013f6:	2b00      	cmp	r3, #0
  80013f8:	d101      	bne.n	80013fe <Line1ScanDetection+0xc2>
  80013fa:	4a35      	ldr	r2, [pc, #212]	; (80014d0 <Line1ScanDetection+0x194>)
  80013fc:	e000      	b.n	8001400 <Line1ScanDetection+0xc4>
  80013fe:	4a35      	ldr	r2, [pc, #212]	; (80014d4 <Line1ScanDetection+0x198>)
  8001400:	79fb      	ldrb	r3, [r7, #7]
- 8001402:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001402:	2b00      	cmp	r3, #0
  8001404:	d102      	bne.n	800140c <Line1ScanDetection+0xd0>
  8001406:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  800140a:	e000      	b.n	800140e <Line1ScanDetection+0xd2>
@@ -2332,13 +2329,13 @@ uint32_t Line1ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_3(side) == 1)
  8001422:	79fb      	ldrb	r3, [r7, #7]
- 8001424:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001424:	2b00      	cmp	r3, #0
  8001426:	d101      	bne.n	800142c <Line1ScanDetection+0xf0>
  8001428:	4a29      	ldr	r2, [pc, #164]	; (80014d0 <Line1ScanDetection+0x194>)
  800142a:	e000      	b.n	800142e <Line1ScanDetection+0xf2>
  800142c:	4a29      	ldr	r2, [pc, #164]	; (80014d4 <Line1ScanDetection+0x198>)
  800142e:	79fb      	ldrb	r3, [r7, #7]
- 8001430:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001430:	2b00      	cmp	r3, #0
  8001432:	d102      	bne.n	800143a <Line1ScanDetection+0xfe>
  8001434:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  8001438:	e000      	b.n	800143c <Line1ScanDetection+0x100>
@@ -2357,13 +2354,13 @@ uint32_t Line1ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_4(side) == 1)
  8001450:	79fb      	ldrb	r3, [r7, #7]
- 8001452:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001452:	2b00      	cmp	r3, #0
  8001454:	d101      	bne.n	800145a <Line1ScanDetection+0x11e>
  8001456:	4a1e      	ldr	r2, [pc, #120]	; (80014d0 <Line1ScanDetection+0x194>)
  8001458:	e000      	b.n	800145c <Line1ScanDetection+0x120>
  800145a:	4a1e      	ldr	r2, [pc, #120]	; (80014d4 <Line1ScanDetection+0x198>)
  800145c:	79fb      	ldrb	r3, [r7, #7]
- 800145e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800145e:	2b00      	cmp	r3, #0
  8001460:	d102      	bne.n	8001468 <Line1ScanDetection+0x12c>
  8001462:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001466:	e000      	b.n	800146a <Line1ScanDetection+0x12e>
@@ -2382,13 +2379,13 @@ uint32_t Line1ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_5(side) == 1)
  800147e:	79fb      	ldrb	r3, [r7, #7]
- 8001480:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001480:	2b00      	cmp	r3, #0
  8001482:	d101      	bne.n	8001488 <Line1ScanDetection+0x14c>
  8001484:	4a12      	ldr	r2, [pc, #72]	; (80014d0 <Line1ScanDetection+0x194>)
  8001486:	e000      	b.n	800148a <Line1ScanDetection+0x14e>
  8001488:	4a12      	ldr	r2, [pc, #72]	; (80014d4 <Line1ScanDetection+0x198>)
  800148a:	79fb      	ldrb	r3, [r7, #7]
- 800148c:	2b4c      	cmp	r3, #76	; 0x4c
+ 800148c:	2b00      	cmp	r3, #0
  800148e:	d102      	bne.n	8001496 <Line1ScanDetection+0x15a>
  8001490:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001494:	e000      	b.n	8001498 <Line1ScanDetection+0x15c>
@@ -2437,16 +2434,16 @@ uint32_t Line1ScanDetection(char side)
 
 080014d8 <Line1ScanOver>:
 
-void Line1ScanOver(char side)
+void Line1ScanOver(KeypadSide side)
 {
  80014d8:	b580      	push	{r7, lr}
  80014da:	b084      	sub	sp, #16
  80014dc:	af00      	add	r7, sp, #0
  80014de:	4603      	mov	r3, r0
  80014e0:	71fb      	strb	r3, [r7, #7]
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  80014e2:	79fb      	ldrb	r3, [r7, #7]
- 80014e4:	2b4c      	cmp	r3, #76	; 0x4c
+ 80014e4:	2b00      	cmp	r3, #0
  80014e6:	d101      	bne.n	80014ec <Line1ScanOver+0x14>
  80014e8:	4b2f      	ldr	r3, [pc, #188]	; (80015a8 <Line1ScanOver+0xd0>)
  80014ea:	e000      	b.n	80014ee <Line1ScanOver+0x16>
@@ -2455,13 +2452,13 @@ void Line1ScanOver(char side)
 
 	if((GET_IO_KEY_2(side) == 1)||(GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  80014f0:	79fb      	ldrb	r3, [r7, #7]
- 80014f2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80014f2:	2b00      	cmp	r3, #0
  80014f4:	d101      	bne.n	80014fa <Line1ScanOver+0x22>
  80014f6:	4a2e      	ldr	r2, [pc, #184]	; (80015b0 <Line1ScanOver+0xd8>)
  80014f8:	e000      	b.n	80014fc <Line1ScanOver+0x24>
  80014fa:	4a2e      	ldr	r2, [pc, #184]	; (80015b4 <Line1ScanOver+0xdc>)
  80014fc:	79fb      	ldrb	r3, [r7, #7]
- 80014fe:	2b4c      	cmp	r3, #76	; 0x4c
+ 80014fe:	2b00      	cmp	r3, #0
  8001500:	d102      	bne.n	8001508 <Line1ScanOver+0x30>
  8001502:	f44f 4380 	mov.w	r3, #16384	; 0x4000
  8001506:	e000      	b.n	800150a <Line1ScanOver+0x32>
@@ -2473,13 +2470,13 @@ void Line1ScanOver(char side)
  8001514:	2b01      	cmp	r3, #1
  8001516:	d03b      	beq.n	8001590 <Line1ScanOver+0xb8>
  8001518:	79fb      	ldrb	r3, [r7, #7]
- 800151a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800151a:	2b00      	cmp	r3, #0
  800151c:	d101      	bne.n	8001522 <Line1ScanOver+0x4a>
  800151e:	4a24      	ldr	r2, [pc, #144]	; (80015b0 <Line1ScanOver+0xd8>)
  8001520:	e000      	b.n	8001524 <Line1ScanOver+0x4c>
  8001522:	4a24      	ldr	r2, [pc, #144]	; (80015b4 <Line1ScanOver+0xdc>)
  8001524:	79fb      	ldrb	r3, [r7, #7]
- 8001526:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001526:	2b00      	cmp	r3, #0
  8001528:	d102      	bne.n	8001530 <Line1ScanOver+0x58>
  800152a:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  800152e:	e000      	b.n	8001532 <Line1ScanOver+0x5a>
@@ -2491,13 +2488,13 @@ void Line1ScanOver(char side)
  800153c:	2b01      	cmp	r3, #1
  800153e:	d027      	beq.n	8001590 <Line1ScanOver+0xb8>
  8001540:	79fb      	ldrb	r3, [r7, #7]
- 8001542:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001542:	2b00      	cmp	r3, #0
  8001544:	d101      	bne.n	800154a <Line1ScanOver+0x72>
  8001546:	4a1a      	ldr	r2, [pc, #104]	; (80015b0 <Line1ScanOver+0xd8>)
  8001548:	e000      	b.n	800154c <Line1ScanOver+0x74>
  800154a:	4a1a      	ldr	r2, [pc, #104]	; (80015b4 <Line1ScanOver+0xdc>)
  800154c:	79fb      	ldrb	r3, [r7, #7]
- 800154e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800154e:	2b00      	cmp	r3, #0
  8001550:	d102      	bne.n	8001558 <Line1ScanOver+0x80>
  8001552:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001556:	e000      	b.n	800155a <Line1ScanOver+0x82>
@@ -2509,13 +2506,13 @@ void Line1ScanOver(char side)
  8001564:	2b01      	cmp	r3, #1
  8001566:	d013      	beq.n	8001590 <Line1ScanOver+0xb8>
  8001568:	79fb      	ldrb	r3, [r7, #7]
- 800156a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800156a:	2b00      	cmp	r3, #0
  800156c:	d101      	bne.n	8001572 <Line1ScanOver+0x9a>
  800156e:	4a10      	ldr	r2, [pc, #64]	; (80015b0 <Line1ScanOver+0xd8>)
  8001570:	e000      	b.n	8001574 <Line1ScanOver+0x9c>
  8001572:	4a10      	ldr	r2, [pc, #64]	; (80015b4 <Line1ScanOver+0xdc>)
  8001574:	79fb      	ldrb	r3, [r7, #7]
- 8001576:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001576:	2b00      	cmp	r3, #0
  8001578:	d102      	bne.n	8001580 <Line1ScanOver+0xa8>
  800157a:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800157e:	e000      	b.n	8001582 <Line1ScanOver+0xaa>
@@ -2553,7 +2550,7 @@ void Line1ScanOver(char side)
 
 080015b8 <Line2ScanStart>:
 /* Scan line 2 */
-void Line2ScanStart(char side)
+void Line2ScanStart(KeypadSide side)
 {
  80015b8:	b580      	push	{r7, lr}
  80015ba:	b084      	sub	sp, #16
@@ -2564,9 +2561,9 @@ void Line2ScanStart(char side)
  80015c2:	79fb      	ldrb	r3, [r7, #7]
  80015c4:	4618      	mov	r0, r3
  80015c6:	f7ff f9f5 	bl	80009b4 <ConfigurationLine2>
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  80015ca:	79fb      	ldrb	r3, [r7, #7]
- 80015cc:	2b4c      	cmp	r3, #76	; 0x4c
+ 80015cc:	2b00      	cmp	r3, #0
  80015ce:	d101      	bne.n	80015d4 <Line2ScanStart+0x1c>
  80015d0:	4b25      	ldr	r3, [pc, #148]	; (8001668 <Line2ScanStart+0xb0>)
  80015d2:	e000      	b.n	80015d6 <Line2ScanStart+0x1e>
@@ -2575,13 +2572,13 @@ void Line2ScanStart(char side)
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  80015d8:	79fb      	ldrb	r3, [r7, #7]
- 80015da:	2b4c      	cmp	r3, #76	; 0x4c
+ 80015da:	2b00      	cmp	r3, #0
  80015dc:	d101      	bne.n	80015e2 <Line2ScanStart+0x2a>
  80015de:	4a24      	ldr	r2, [pc, #144]	; (8001670 <Line2ScanStart+0xb8>)
  80015e0:	e000      	b.n	80015e4 <Line2ScanStart+0x2c>
  80015e2:	4a24      	ldr	r2, [pc, #144]	; (8001674 <Line2ScanStart+0xbc>)
  80015e4:	79fb      	ldrb	r3, [r7, #7]
- 80015e6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80015e6:	2b00      	cmp	r3, #0
  80015e8:	d102      	bne.n	80015f0 <Line2ScanStart+0x38>
  80015ea:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  80015ee:	e000      	b.n	80015f2 <Line2ScanStart+0x3a>
@@ -2593,13 +2590,13 @@ void Line2ScanStart(char side)
  80015fc:	2b01      	cmp	r3, #1
  80015fe:	d027      	beq.n	8001650 <Line2ScanStart+0x98>
  8001600:	79fb      	ldrb	r3, [r7, #7]
- 8001602:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001602:	2b00      	cmp	r3, #0
  8001604:	d101      	bne.n	800160a <Line2ScanStart+0x52>
  8001606:	4a1a      	ldr	r2, [pc, #104]	; (8001670 <Line2ScanStart+0xb8>)
  8001608:	e000      	b.n	800160c <Line2ScanStart+0x54>
  800160a:	4a1a      	ldr	r2, [pc, #104]	; (8001674 <Line2ScanStart+0xbc>)
  800160c:	79fb      	ldrb	r3, [r7, #7]
- 800160e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800160e:	2b00      	cmp	r3, #0
  8001610:	d102      	bne.n	8001618 <Line2ScanStart+0x60>
  8001612:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001616:	e000      	b.n	800161a <Line2ScanStart+0x62>
@@ -2611,13 +2608,13 @@ void Line2ScanStart(char side)
  8001624:	2b01      	cmp	r3, #1
  8001626:	d013      	beq.n	8001650 <Line2ScanStart+0x98>
  8001628:	79fb      	ldrb	r3, [r7, #7]
- 800162a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800162a:	2b00      	cmp	r3, #0
  800162c:	d101      	bne.n	8001632 <Line2ScanStart+0x7a>
  800162e:	4a10      	ldr	r2, [pc, #64]	; (8001670 <Line2ScanStart+0xb8>)
  8001630:	e000      	b.n	8001634 <Line2ScanStart+0x7c>
  8001632:	4a10      	ldr	r2, [pc, #64]	; (8001674 <Line2ScanStart+0xbc>)
  8001634:	79fb      	ldrb	r3, [r7, #7]
- 8001636:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001636:	2b00      	cmp	r3, #0
  8001638:	d102      	bne.n	8001640 <Line2ScanStart+0x88>
  800163a:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800163e:	e000      	b.n	8001642 <Line2ScanStart+0x8a>
@@ -2655,7 +2652,7 @@ void Line2ScanStart(char side)
 
 08001678 <Line2ScanDetection>:
 
-uint32_t Line2ScanDetection(char side)
+uint32_t Line2ScanDetection(KeypadSide side)
 {
  8001678:	b580      	push	{r7, lr}
  800167a:	b084      	sub	sp, #16
@@ -2663,9 +2660,9 @@ uint32_t Line2ScanDetection(char side)
  800167e:	4603      	mov	r3, r0
  8001680:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001682:	79fb      	ldrb	r3, [r7, #7]
- 8001684:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001684:	2b00      	cmp	r3, #0
  8001686:	d101      	bne.n	800168c <Line2ScanDetection+0x14>
  8001688:	4b48      	ldr	r3, [pc, #288]	; (80017ac <Line2ScanDetection+0x134>)
  800168a:	e000      	b.n	800168e <Line2ScanDetection+0x16>
@@ -2674,13 +2671,13 @@ uint32_t Line2ScanDetection(char side)
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  8001690:	79fb      	ldrb	r3, [r7, #7]
- 8001692:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001692:	2b00      	cmp	r3, #0
  8001694:	d101      	bne.n	800169a <Line2ScanDetection+0x22>
  8001696:	4a47      	ldr	r2, [pc, #284]	; (80017b4 <Line2ScanDetection+0x13c>)
  8001698:	e000      	b.n	800169c <Line2ScanDetection+0x24>
  800169a:	4a47      	ldr	r2, [pc, #284]	; (80017b8 <Line2ScanDetection+0x140>)
  800169c:	79fb      	ldrb	r3, [r7, #7]
- 800169e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800169e:	2b00      	cmp	r3, #0
  80016a0:	d102      	bne.n	80016a8 <Line2ScanDetection+0x30>
  80016a2:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  80016a6:	e000      	b.n	80016aa <Line2ScanDetection+0x32>
@@ -2692,13 +2689,13 @@ uint32_t Line2ScanDetection(char side)
  80016b4:	2b01      	cmp	r3, #1
  80016b6:	d027      	beq.n	8001708 <Line2ScanDetection+0x90>
  80016b8:	79fb      	ldrb	r3, [r7, #7]
- 80016ba:	2b4c      	cmp	r3, #76	; 0x4c
+ 80016ba:	2b00      	cmp	r3, #0
  80016bc:	d101      	bne.n	80016c2 <Line2ScanDetection+0x4a>
  80016be:	4a3d      	ldr	r2, [pc, #244]	; (80017b4 <Line2ScanDetection+0x13c>)
  80016c0:	e000      	b.n	80016c4 <Line2ScanDetection+0x4c>
  80016c2:	4a3d      	ldr	r2, [pc, #244]	; (80017b8 <Line2ScanDetection+0x140>)
  80016c4:	79fb      	ldrb	r3, [r7, #7]
- 80016c6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80016c6:	2b00      	cmp	r3, #0
  80016c8:	d102      	bne.n	80016d0 <Line2ScanDetection+0x58>
  80016ca:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  80016ce:	e000      	b.n	80016d2 <Line2ScanDetection+0x5a>
@@ -2710,13 +2707,13 @@ uint32_t Line2ScanDetection(char side)
  80016dc:	2b01      	cmp	r3, #1
  80016de:	d013      	beq.n	8001708 <Line2ScanDetection+0x90>
  80016e0:	79fb      	ldrb	r3, [r7, #7]
- 80016e2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80016e2:	2b00      	cmp	r3, #0
  80016e4:	d101      	bne.n	80016ea <Line2ScanDetection+0x72>
  80016e6:	4a33      	ldr	r2, [pc, #204]	; (80017b4 <Line2ScanDetection+0x13c>)
  80016e8:	e000      	b.n	80016ec <Line2ScanDetection+0x74>
  80016ea:	4a33      	ldr	r2, [pc, #204]	; (80017b8 <Line2ScanDetection+0x140>)
  80016ec:	79fb      	ldrb	r3, [r7, #7]
- 80016ee:	2b4c      	cmp	r3, #76	; 0x4c
+ 80016ee:	2b00      	cmp	r3, #0
  80016f0:	d102      	bne.n	80016f8 <Line2ScanDetection+0x80>
  80016f2:	f44f 6300 	mov.w	r3, #2048	; 0x800
  80016f6:	e000      	b.n	80016fa <Line2ScanDetection+0x82>
@@ -2730,13 +2727,13 @@ uint32_t Line2ScanDetection(char side)
 	{
 		if(GET_IO_KEY_3(side) == 1)
  8001708:	79fb      	ldrb	r3, [r7, #7]
- 800170a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800170a:	2b00      	cmp	r3, #0
  800170c:	d101      	bne.n	8001712 <Line2ScanDetection+0x9a>
  800170e:	4a29      	ldr	r2, [pc, #164]	; (80017b4 <Line2ScanDetection+0x13c>)
  8001710:	e000      	b.n	8001714 <Line2ScanDetection+0x9c>
  8001712:	4a29      	ldr	r2, [pc, #164]	; (80017b8 <Line2ScanDetection+0x140>)
  8001714:	79fb      	ldrb	r3, [r7, #7]
- 8001716:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001716:	2b00      	cmp	r3, #0
  8001718:	d102      	bne.n	8001720 <Line2ScanDetection+0xa8>
  800171a:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  800171e:	e000      	b.n	8001722 <Line2ScanDetection+0xaa>
@@ -2755,13 +2752,13 @@ uint32_t Line2ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_4(side) == 1)
  8001736:	79fb      	ldrb	r3, [r7, #7]
- 8001738:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001738:	2b00      	cmp	r3, #0
  800173a:	d101      	bne.n	8001740 <Line2ScanDetection+0xc8>
  800173c:	4a1d      	ldr	r2, [pc, #116]	; (80017b4 <Line2ScanDetection+0x13c>)
  800173e:	e000      	b.n	8001742 <Line2ScanDetection+0xca>
  8001740:	4a1d      	ldr	r2, [pc, #116]	; (80017b8 <Line2ScanDetection+0x140>)
  8001742:	79fb      	ldrb	r3, [r7, #7]
- 8001744:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001744:	2b00      	cmp	r3, #0
  8001746:	d102      	bne.n	800174e <Line2ScanDetection+0xd6>
  8001748:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  800174c:	e000      	b.n	8001750 <Line2ScanDetection+0xd8>
@@ -2780,13 +2777,13 @@ uint32_t Line2ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_5(side) == 1)
  8001764:	79fb      	ldrb	r3, [r7, #7]
- 8001766:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001766:	2b00      	cmp	r3, #0
  8001768:	d101      	bne.n	800176e <Line2ScanDetection+0xf6>
  800176a:	4a12      	ldr	r2, [pc, #72]	; (80017b4 <Line2ScanDetection+0x13c>)
  800176c:	e000      	b.n	8001770 <Line2ScanDetection+0xf8>
  800176e:	4a12      	ldr	r2, [pc, #72]	; (80017b8 <Line2ScanDetection+0x140>)
  8001770:	79fb      	ldrb	r3, [r7, #7]
- 8001772:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001772:	2b00      	cmp	r3, #0
  8001774:	d102      	bne.n	800177c <Line2ScanDetection+0x104>
  8001776:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800177a:	e000      	b.n	800177e <Line2ScanDetection+0x106>
@@ -2834,16 +2831,16 @@ uint32_t Line2ScanDetection(char side)
 
 080017bc <Line2ScanOver>:
 
-void Line2ScanOver(char side)
+void Line2ScanOver(KeypadSide side)
 {
  80017bc:	b580      	push	{r7, lr}
  80017be:	b084      	sub	sp, #16
  80017c0:	af00      	add	r7, sp, #0
  80017c2:	4603      	mov	r3, r0
  80017c4:	71fb      	strb	r3, [r7, #7]
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  80017c6:	79fb      	ldrb	r3, [r7, #7]
- 80017c8:	2b4c      	cmp	r3, #76	; 0x4c
+ 80017c8:	2b00      	cmp	r3, #0
  80017ca:	d101      	bne.n	80017d0 <Line2ScanOver+0x14>
  80017cc:	4b25      	ldr	r3, [pc, #148]	; (8001864 <Line2ScanOver+0xa8>)
  80017ce:	e000      	b.n	80017d2 <Line2ScanOver+0x16>
@@ -2852,13 +2849,13 @@ void Line2ScanOver(char side)
 
 	if((GET_IO_KEY_3(side) == 1)||(GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  80017d4:	79fb      	ldrb	r3, [r7, #7]
- 80017d6:	2b4c      	cmp	r3, #76	; 0x4c
+ 80017d6:	2b00      	cmp	r3, #0
  80017d8:	d101      	bne.n	80017de <Line2ScanOver+0x22>
  80017da:	4a24      	ldr	r2, [pc, #144]	; (800186c <Line2ScanOver+0xb0>)
  80017dc:	e000      	b.n	80017e0 <Line2ScanOver+0x24>
  80017de:	4a24      	ldr	r2, [pc, #144]	; (8001870 <Line2ScanOver+0xb4>)
  80017e0:	79fb      	ldrb	r3, [r7, #7]
- 80017e2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80017e2:	2b00      	cmp	r3, #0
  80017e4:	d102      	bne.n	80017ec <Line2ScanOver+0x30>
  80017e6:	f44f 5300 	mov.w	r3, #8192	; 0x2000
  80017ea:	e000      	b.n	80017ee <Line2ScanOver+0x32>
@@ -2870,13 +2867,13 @@ void Line2ScanOver(char side)
  80017f8:	2b01      	cmp	r3, #1
  80017fa:	d027      	beq.n	800184c <Line2ScanOver+0x90>
  80017fc:	79fb      	ldrb	r3, [r7, #7]
- 80017fe:	2b4c      	cmp	r3, #76	; 0x4c
+ 80017fe:	2b00      	cmp	r3, #0
  8001800:	d101      	bne.n	8001806 <Line2ScanOver+0x4a>
  8001802:	4a1a      	ldr	r2, [pc, #104]	; (800186c <Line2ScanOver+0xb0>)
  8001804:	e000      	b.n	8001808 <Line2ScanOver+0x4c>
  8001806:	4a1a      	ldr	r2, [pc, #104]	; (8001870 <Line2ScanOver+0xb4>)
  8001808:	79fb      	ldrb	r3, [r7, #7]
- 800180a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800180a:	2b00      	cmp	r3, #0
  800180c:	d102      	bne.n	8001814 <Line2ScanOver+0x58>
  800180e:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001812:	e000      	b.n	8001816 <Line2ScanOver+0x5a>
@@ -2888,13 +2885,13 @@ void Line2ScanOver(char side)
  8001820:	2b01      	cmp	r3, #1
  8001822:	d013      	beq.n	800184c <Line2ScanOver+0x90>
  8001824:	79fb      	ldrb	r3, [r7, #7]
- 8001826:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001826:	2b00      	cmp	r3, #0
  8001828:	d101      	bne.n	800182e <Line2ScanOver+0x72>
  800182a:	4a10      	ldr	r2, [pc, #64]	; (800186c <Line2ScanOver+0xb0>)
  800182c:	e000      	b.n	8001830 <Line2ScanOver+0x74>
  800182e:	4a10      	ldr	r2, [pc, #64]	; (8001870 <Line2ScanOver+0xb4>)
  8001830:	79fb      	ldrb	r3, [r7, #7]
- 8001832:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001832:	2b00      	cmp	r3, #0
  8001834:	d102      	bne.n	800183c <Line2ScanOver+0x80>
  8001836:	f44f 6300 	mov.w	r3, #2048	; 0x800
  800183a:	e000      	b.n	800183e <Line2ScanOver+0x82>
@@ -2932,7 +2929,7 @@ void Line2ScanOver(char side)
 
 08001874 <Line3ScanStart>:
 /* Scan line 3 */
-void Line3ScanStart(char side)
+void Line3ScanStart(KeypadSide side)
 {
  8001874:	b580      	push	{r7, lr}
  8001876:	b084      	sub	sp, #16
@@ -2943,9 +2940,9 @@ void Line3ScanStart(char side)
  800187e:	79fb      	ldrb	r3, [r7, #7]
  8001880:	4618      	mov	r0, r3
  8001882:	f7ff f92f 	bl	8000ae4 <ConfigurationLine3>
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001886:	79fb      	ldrb	r3, [r7, #7]
- 8001888:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001888:	2b00      	cmp	r3, #0
  800188a:	d101      	bne.n	8001890 <Line3ScanStart+0x1c>
  800188c:	4b1b      	ldr	r3, [pc, #108]	; (80018fc <Line3ScanStart+0x88>)
  800188e:	e000      	b.n	8001892 <Line3ScanStart+0x1e>
@@ -2954,13 +2951,13 @@ void Line3ScanStart(char side)
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  8001894:	79fb      	ldrb	r3, [r7, #7]
- 8001896:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001896:	2b00      	cmp	r3, #0
  8001898:	d101      	bne.n	800189e <Line3ScanStart+0x2a>
  800189a:	4a1a      	ldr	r2, [pc, #104]	; (8001904 <Line3ScanStart+0x90>)
  800189c:	e000      	b.n	80018a0 <Line3ScanStart+0x2c>
  800189e:	4a1a      	ldr	r2, [pc, #104]	; (8001908 <Line3ScanStart+0x94>)
  80018a0:	79fb      	ldrb	r3, [r7, #7]
- 80018a2:	2b4c      	cmp	r3, #76	; 0x4c
+ 80018a2:	2b00      	cmp	r3, #0
  80018a4:	d102      	bne.n	80018ac <Line3ScanStart+0x38>
  80018a6:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  80018aa:	e000      	b.n	80018ae <Line3ScanStart+0x3a>
@@ -2972,13 +2969,13 @@ void Line3ScanStart(char side)
  80018b8:	2b01      	cmp	r3, #1
  80018ba:	d013      	beq.n	80018e4 <Line3ScanStart+0x70>
  80018bc:	79fb      	ldrb	r3, [r7, #7]
- 80018be:	2b4c      	cmp	r3, #76	; 0x4c
+ 80018be:	2b00      	cmp	r3, #0
  80018c0:	d101      	bne.n	80018c6 <Line3ScanStart+0x52>
  80018c2:	4a10      	ldr	r2, [pc, #64]	; (8001904 <Line3ScanStart+0x90>)
  80018c4:	e000      	b.n	80018c8 <Line3ScanStart+0x54>
  80018c6:	4a10      	ldr	r2, [pc, #64]	; (8001908 <Line3ScanStart+0x94>)
  80018c8:	79fb      	ldrb	r3, [r7, #7]
- 80018ca:	2b4c      	cmp	r3, #76	; 0x4c
+ 80018ca:	2b00      	cmp	r3, #0
  80018cc:	d102      	bne.n	80018d4 <Line3ScanStart+0x60>
  80018ce:	f44f 6300 	mov.w	r3, #2048	; 0x800
  80018d2:	e000      	b.n	80018d6 <Line3ScanStart+0x62>
@@ -3016,7 +3013,7 @@ void Line3ScanStart(char side)
 
 0800190c <Line3ScanDetection>:
 
-uint32_t Line3ScanDetection(char side)
+uint32_t Line3ScanDetection(KeypadSide side)
 {
  800190c:	b580      	push	{r7, lr}
  800190e:	b084      	sub	sp, #16
@@ -3024,9 +3021,9 @@ uint32_t Line3ScanDetection(char side)
  8001912:	4603      	mov	r3, r0
  8001914:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001916:	79fb      	ldrb	r3, [r7, #7]
- 8001918:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001918:	2b00      	cmp	r3, #0
  800191a:	d101      	bne.n	8001920 <Line3ScanDetection+0x14>
  800191c:	4b33      	ldr	r3, [pc, #204]	; (80019ec <Line3ScanDetection+0xe0>)
  800191e:	e000      	b.n	8001922 <Line3ScanDetection+0x16>
@@ -3035,13 +3032,13 @@ uint32_t Line3ScanDetection(char side)
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  8001924:	79fb      	ldrb	r3, [r7, #7]
- 8001926:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001926:	2b00      	cmp	r3, #0
  8001928:	d101      	bne.n	800192e <Line3ScanDetection+0x22>
  800192a:	4a32      	ldr	r2, [pc, #200]	; (80019f4 <Line3ScanDetection+0xe8>)
  800192c:	e000      	b.n	8001930 <Line3ScanDetection+0x24>
  800192e:	4a32      	ldr	r2, [pc, #200]	; (80019f8 <Line3ScanDetection+0xec>)
  8001930:	79fb      	ldrb	r3, [r7, #7]
- 8001932:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001932:	2b00      	cmp	r3, #0
  8001934:	d102      	bne.n	800193c <Line3ScanDetection+0x30>
  8001936:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  800193a:	e000      	b.n	800193e <Line3ScanDetection+0x32>
@@ -3053,13 +3050,13 @@ uint32_t Line3ScanDetection(char side)
  8001948:	2b01      	cmp	r3, #1
  800194a:	d013      	beq.n	8001974 <Line3ScanDetection+0x68>
  800194c:	79fb      	ldrb	r3, [r7, #7]
- 800194e:	2b4c      	cmp	r3, #76	; 0x4c
+ 800194e:	2b00      	cmp	r3, #0
  8001950:	d101      	bne.n	8001956 <Line3ScanDetection+0x4a>
  8001952:	4a28      	ldr	r2, [pc, #160]	; (80019f4 <Line3ScanDetection+0xe8>)
  8001954:	e000      	b.n	8001958 <Line3ScanDetection+0x4c>
  8001956:	4a28      	ldr	r2, [pc, #160]	; (80019f8 <Line3ScanDetection+0xec>)
  8001958:	79fb      	ldrb	r3, [r7, #7]
- 800195a:	2b4c      	cmp	r3, #76	; 0x4c
+ 800195a:	2b00      	cmp	r3, #0
  800195c:	d102      	bne.n	8001964 <Line3ScanDetection+0x58>
  800195e:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001962:	e000      	b.n	8001966 <Line3ScanDetection+0x5a>
@@ -3073,13 +3070,13 @@ uint32_t Line3ScanDetection(char side)
 	{
 		if(GET_IO_KEY_4(side) == 1)
  8001974:	79fb      	ldrb	r3, [r7, #7]
- 8001976:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001976:	2b00      	cmp	r3, #0
  8001978:	d101      	bne.n	800197e <Line3ScanDetection+0x72>
  800197a:	4a1e      	ldr	r2, [pc, #120]	; (80019f4 <Line3ScanDetection+0xe8>)
  800197c:	e000      	b.n	8001980 <Line3ScanDetection+0x74>
  800197e:	4a1e      	ldr	r2, [pc, #120]	; (80019f8 <Line3ScanDetection+0xec>)
  8001980:	79fb      	ldrb	r3, [r7, #7]
- 8001982:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001982:	2b00      	cmp	r3, #0
  8001984:	d102      	bne.n	800198c <Line3ScanDetection+0x80>
  8001986:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  800198a:	e000      	b.n	800198e <Line3ScanDetection+0x82>
@@ -3098,13 +3095,13 @@ uint32_t Line3ScanDetection(char side)
 		}
 		else if(GET_IO_KEY_5(side) == 1)
  80019a2:	79fb      	ldrb	r3, [r7, #7]
- 80019a4:	2b4c      	cmp	r3, #76	; 0x4c
+ 80019a4:	2b00      	cmp	r3, #0
  80019a6:	d101      	bne.n	80019ac <Line3ScanDetection+0xa0>
  80019a8:	4a12      	ldr	r2, [pc, #72]	; (80019f4 <Line3ScanDetection+0xe8>)
  80019aa:	e000      	b.n	80019ae <Line3ScanDetection+0xa2>
  80019ac:	4a12      	ldr	r2, [pc, #72]	; (80019f8 <Line3ScanDetection+0xec>)
  80019ae:	79fb      	ldrb	r3, [r7, #7]
- 80019b0:	2b4c      	cmp	r3, #76	; 0x4c
+ 80019b0:	2b00      	cmp	r3, #0
  80019b2:	d102      	bne.n	80019ba <Line3ScanDetection+0xae>
  80019b4:	f44f 6300 	mov.w	r3, #2048	; 0x800
  80019b8:	e000      	b.n	80019bc <Line3ScanDetection+0xb0>
@@ -3153,16 +3150,16 @@ uint32_t Line3ScanDetection(char side)
 
 080019fc <Line3ScanOver>:
 
-void Line3ScanOver(char side)
+void Line3ScanOver(KeypadSide side)
 {
  80019fc:	b580      	push	{r7, lr}
  80019fe:	b084      	sub	sp, #16
  8001a00:	af00      	add	r7, sp, #0
  8001a02:	4603      	mov	r3, r0
  8001a04:	71fb      	strb	r3, [r7, #7]
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001a06:	79fb      	ldrb	r3, [r7, #7]
- 8001a08:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001a08:	2b00      	cmp	r3, #0
  8001a0a:	d101      	bne.n	8001a10 <Line3ScanOver+0x14>
  8001a0c:	4b1b      	ldr	r3, [pc, #108]	; (8001a7c <Line3ScanOver+0x80>)
  8001a0e:	e000      	b.n	8001a12 <Line3ScanOver+0x16>
@@ -3171,13 +3168,13 @@ void Line3ScanOver(char side)
 
 	if((GET_IO_KEY_4(side) == 1)||(GET_IO_KEY_5(side) == 1))
  8001a14:	79fb      	ldrb	r3, [r7, #7]
- 8001a16:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001a16:	2b00      	cmp	r3, #0
  8001a18:	d101      	bne.n	8001a1e <Line3ScanOver+0x22>
  8001a1a:	4a1a      	ldr	r2, [pc, #104]	; (8001a84 <Line3ScanOver+0x88>)
  8001a1c:	e000      	b.n	8001a20 <Line3ScanOver+0x24>
  8001a1e:	4a1a      	ldr	r2, [pc, #104]	; (8001a88 <Line3ScanOver+0x8c>)
  8001a20:	79fb      	ldrb	r3, [r7, #7]
- 8001a22:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001a22:	2b00      	cmp	r3, #0
  8001a24:	d102      	bne.n	8001a2c <Line3ScanOver+0x30>
  8001a26:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  8001a2a:	e000      	b.n	8001a2e <Line3ScanOver+0x32>
@@ -3189,13 +3186,13 @@ void Line3ScanOver(char side)
  8001a38:	2b01      	cmp	r3, #1
  8001a3a:	d013      	beq.n	8001a64 <Line3ScanOver+0x68>
  8001a3c:	79fb      	ldrb	r3, [r7, #7]
- 8001a3e:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001a3e:	2b00      	cmp	r3, #0
  8001a40:	d101      	bne.n	8001a46 <Line3ScanOver+0x4a>
  8001a42:	4a10      	ldr	r2, [pc, #64]	; (8001a84 <Line3ScanOver+0x88>)
  8001a44:	e000      	b.n	8001a48 <Line3ScanOver+0x4c>
  8001a46:	4a10      	ldr	r2, [pc, #64]	; (8001a88 <Line3ScanOver+0x8c>)
  8001a48:	79fb      	ldrb	r3, [r7, #7]
- 8001a4a:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001a4a:	2b00      	cmp	r3, #0
  8001a4c:	d102      	bne.n	8001a54 <Line3ScanOver+0x58>
  8001a4e:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001a52:	e000      	b.n	8001a56 <Line3ScanOver+0x5a>
@@ -3233,7 +3230,7 @@ void Line3ScanOver(char side)
 
 08001a8c <Line4ScanStart>:
 /* Scan line 4 */
-void Line4ScanStart(char side)
+void Line4ScanStart(KeypadSide side)
 {
  8001a8c:	b580      	push	{r7, lr}
  8001a8e:	b084      	sub	sp, #16
@@ -3244,9 +3241,9 @@ void Line4ScanStart(char side)
  8001a96:	79fb      	ldrb	r3, [r7, #7]
  8001a98:	4618      	mov	r0, r3
  8001a9a:	f7ff f8c5 	bl	8000c28 <ConfigurationLine4>
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001a9e:	79fb      	ldrb	r3, [r7, #7]
- 8001aa0:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001aa0:	2b00      	cmp	r3, #0
  8001aa2:	d101      	bne.n	8001aa8 <Line4ScanStart+0x1c>
  8001aa4:	4b11      	ldr	r3, [pc, #68]	; (8001aec <Line4ScanStart+0x60>)
  8001aa6:	e000      	b.n	8001aaa <Line4ScanStart+0x1e>
@@ -3255,13 +3252,13 @@ void Line4ScanStart(char side)
 
 	if(GET_IO_KEY_5(side) == 1)
  8001aac:	79fb      	ldrb	r3, [r7, #7]
- 8001aae:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001aae:	2b00      	cmp	r3, #0
  8001ab0:	d101      	bne.n	8001ab6 <Line4ScanStart+0x2a>
  8001ab2:	4a10      	ldr	r2, [pc, #64]	; (8001af4 <Line4ScanStart+0x68>)
  8001ab4:	e000      	b.n	8001ab8 <Line4ScanStart+0x2c>
  8001ab6:	4a10      	ldr	r2, [pc, #64]	; (8001af8 <Line4ScanStart+0x6c>)
  8001ab8:	79fb      	ldrb	r3, [r7, #7]
- 8001aba:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001aba:	2b00      	cmp	r3, #0
  8001abc:	d102      	bne.n	8001ac4 <Line4ScanStart+0x38>
  8001abe:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001ac2:	e000      	b.n	8001ac6 <Line4ScanStart+0x3a>
@@ -3301,7 +3298,7 @@ void Line4ScanStart(char side)
 
 08001afc <Line4ScanDetection>:
 
-uint32_t Line4ScanDetection(char side)
+uint32_t Line4ScanDetection(KeypadSide side)
 {
  8001afc:	b580      	push	{r7, lr}
  8001afe:	b084      	sub	sp, #16
@@ -3309,9 +3306,9 @@ uint32_t Line4ScanDetection(char side)
  8001b02:	4603      	mov	r3, r0
  8001b04:	71fb      	strb	r3, [r7, #7]
 	uint32_t ReValue;
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001b06:	79fb      	ldrb	r3, [r7, #7]
- 8001b08:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b08:	2b00      	cmp	r3, #0
  8001b0a:	d101      	bne.n	8001b10 <Line4ScanDetection+0x14>
  8001b0c:	4b13      	ldr	r3, [pc, #76]	; (8001b5c <Line4ScanDetection+0x60>)
  8001b0e:	e000      	b.n	8001b12 <Line4ScanDetection+0x16>
@@ -3320,13 +3317,13 @@ uint32_t Line4ScanDetection(char side)
 
 	if(GET_IO_KEY_5(side) == 1)
  8001b14:	79fb      	ldrb	r3, [r7, #7]
- 8001b16:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b16:	2b00      	cmp	r3, #0
  8001b18:	d101      	bne.n	8001b1e <Line4ScanDetection+0x22>
  8001b1a:	4a12      	ldr	r2, [pc, #72]	; (8001b64 <Line4ScanDetection+0x68>)
  8001b1c:	e000      	b.n	8001b20 <Line4ScanDetection+0x24>
  8001b1e:	4a12      	ldr	r2, [pc, #72]	; (8001b68 <Line4ScanDetection+0x6c>)
  8001b20:	79fb      	ldrb	r3, [r7, #7]
- 8001b22:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b22:	2b00      	cmp	r3, #0
  8001b24:	d102      	bne.n	8001b2c <Line4ScanDetection+0x30>
  8001b26:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001b2a:	e000      	b.n	8001b2e <Line4ScanDetection+0x32>
@@ -3373,16 +3370,16 @@ uint32_t Line4ScanDetection(char side)
 
 08001b6c <Line4ScanOver>:
 
-void Line4ScanOver(char side)
+void Line4ScanOver(KeypadSide side)
 {
  8001b6c:	b580      	push	{r7, lr}
  8001b6e:	b084      	sub	sp, #16
  8001b70:	af00      	add	r7, sp, #0
  8001b72:	4603      	mov	r3, r0
  8001b74:	71fb      	strb	r3, [r7, #7]
-	Key_State* CurrentKeyState = (side == 'L' ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
+	Key_State* CurrentKeyState = (side == LEFT ? &CurrentKeyStateLeft : &CurrentKeyStateRight);
  8001b76:	79fb      	ldrb	r3, [r7, #7]
- 8001b78:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b78:	2b00      	cmp	r3, #0
  8001b7a:	d101      	bne.n	8001b80 <Line4ScanOver+0x14>
  8001b7c:	4b11      	ldr	r3, [pc, #68]	; (8001bc4 <Line4ScanOver+0x58>)
  8001b7e:	e000      	b.n	8001b82 <Line4ScanOver+0x16>
@@ -3391,13 +3388,13 @@ void Line4ScanOver(char side)
 
 	if(GET_IO_KEY_5(side) == 1)
  8001b84:	79fb      	ldrb	r3, [r7, #7]
- 8001b86:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b86:	2b00      	cmp	r3, #0
  8001b88:	d101      	bne.n	8001b8e <Line4ScanOver+0x22>
  8001b8a:	4a10      	ldr	r2, [pc, #64]	; (8001bcc <Line4ScanOver+0x60>)
  8001b8c:	e000      	b.n	8001b90 <Line4ScanOver+0x24>
  8001b8e:	4a10      	ldr	r2, [pc, #64]	; (8001bd0 <Line4ScanOver+0x64>)
  8001b90:	79fb      	ldrb	r3, [r7, #7]
- 8001b92:	2b4c      	cmp	r3, #76	; 0x4c
+ 8001b92:	2b00      	cmp	r3, #0
  8001b94:	d102      	bne.n	8001b9c <Line4ScanOver+0x30>
  8001b96:	f44f 6300 	mov.w	r3, #2048	; 0x800
  8001b9a:	e000      	b.n	8001b9e <Line4ScanOver+0x32>
@@ -3485,11 +3482,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  KeypadScanTest('L');
- 8001bfa:	204c      	movs	r0, #76	; 0x4c
+	  KeypadScanTest(LEFT);
+ 8001bfa:	2000      	movs	r0, #0
  8001bfc:	f7fe fd58 	bl	80006b0 <KeypadScanTest>
-	  KeypadScanTest('R');
- 8001c00:	2052      	movs	r0, #82	; 0x52
+	  KeypadScanTest(RIGHT);
+ 8001c00:	2001      	movs	r0, #1
  8001c02:	f7fe fd55 	bl	80006b0 <KeypadScanTest>
 	  dataSendBuffer[0] = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
  8001c06:	2101      	movs	r1, #1
@@ -3508,7 +3505,7 @@ int main(void)
 	  HAL_Delay(100);
  8001c20:	2064      	movs	r0, #100	; 0x64
  8001c22:	f000 faaf 	bl	8002184 <HAL_Delay>
-  {
+	  KeypadScanTest(LEFT);
  8001c26:	e7e8      	b.n	8001bfa <main+0x26>
  8001c28:	200001d8 	.word	0x200001d8
  8001c2c:	40020000 	.word	0x40020000

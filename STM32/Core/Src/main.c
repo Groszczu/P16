@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_customhid.h"
+#include "5IO_Keypad.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +46,8 @@
 
 /* USER CODE BEGIN PV */
 
+// global flag for detecting user input
+uint8_t CHANGED = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,8 +103,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  KeypadScanTest('L');
-	  KeypadScanTest('R');
+	  KeypadScanTest(LEFT);
+	  KeypadScanTest(RIGHT);
 	  dataSendBuffer[0] = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
 
 	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, 3);
