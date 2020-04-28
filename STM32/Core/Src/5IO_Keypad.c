@@ -222,7 +222,6 @@ void ConfigurationLine4(KeypadSide side)
 
   HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_1(side) | IO_KEY_2(side) | IO_KEY_3(side), GPIO_PIN_RESET);
   HAL_GPIO_WritePin(IO_KEY_GPIO(side), IO_KEY_4(side), GPIO_PIN_SET);
-
 }
 
 void GndScanStart(KeypadSide side)
@@ -268,7 +267,7 @@ uint32_t GndScanDetection(KeypadSide side)
 			ReValue = (side == LEFT ? KEY_VALUE_REVERSED_RIGHT : KEY_VALUE_RIGHT);
 		}	
 
-		*CurrentKeyState = GND_OVER;
+		*CurrentKeyState = GND_DETECTION;
 	}
 	else
 	{
@@ -332,7 +331,7 @@ uint32_t Line1ScanDetection(KeypadSide side)
 			ReValue = KEY_VALUE_FOUR;
 		}
 
-		*CurrentKeyState = LINE1_OVER;
+		*CurrentKeyState = LINE1_DETECTION;
 	}
 	else
 	{
@@ -392,7 +391,7 @@ uint32_t Line2ScanDetection(KeypadSide side)
 			ReValue = KEY_VALUE_SEVEN;
 		}
 
-		*CurrentKeyState = LINE2_OVER;
+		*CurrentKeyState = LINE2_DETECTION;
 	}
 	else
 	{
@@ -448,7 +447,7 @@ uint32_t Line3ScanDetection(KeypadSide side)
 			ReValue = KEY_VALUE_NINE;
 		}
 
-		*CurrentKeyState = LINE3_OVER;
+		*CurrentKeyState = LINE3_DETECTION;
 	}
 	else
 	{
@@ -497,7 +496,7 @@ uint32_t Line4ScanDetection(KeypadSide side)
 	{
 		ReValue = KEY_VALUE_TEN;	
 
-		*CurrentKeyState = LINE4_OVER;
+		*CurrentKeyState = LINE4_DETECTION;
 	}
 	else
 	{

@@ -92,10 +92,10 @@
 __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DESC_SIZE] __ALIGN_END =
 {
   /* USER CODE BEGIN 0 */
-		  0x05, 0x01,                   //USAGE_PAGE (Generic Desktop)
-		  0x09, 0x05,                   //USAGE (Game Pad)
-		  0xa1, 0x01,                   //COLLECTION (APPLICATION)
-		  0xa1, 0x00,                    //   COLLECTION (Physical)
+		  0x05, 0x01,                //USAGE_PAGE (Generic Desktop)
+		  0x09, 0x05,                //USAGE (Game Pad)
+		  0xa1, 0x01,                //COLLECTION (APPLICATION)
+		  0xa1, 0x00,                   //COLLECTION (Physical)
 		  0x05, 0x09,                   //USAGE_PAGE (Button)
 		  0x19, 0x01,                   //USAGE_MINIMUM (Button1)
 		  0x29, 0x10,                   //USAGE_MAXIMUM (Button 16)

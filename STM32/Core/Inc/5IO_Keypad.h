@@ -9,7 +9,6 @@ typedef enum {
 	RIGHT
 } KeypadSide;
 
-
 #define KEY_VALUE_NULL ((uint32_t)0) 
 #define KEY_VALUE_LEFT ((uint32_t)1)
 #define KEY_VALUE_UP ((uint32_t)2)
@@ -33,7 +32,6 @@ typedef enum {
 #define KEY_VALUE_REVERSED_LEFT KEY_VALUE_RIGHT
 #define KEY_VALUE_REVERSED_RIGHT KEY_VALUE_LEFT
 
-
 // Left keypad
 #define LEFT_IO_KEY_GPIO GPIOB
 #define LEFT_IO_KEY_1 GPIO_PIN_15
@@ -41,7 +39,6 @@ typedef enum {
 #define LEFT_IO_KEY_3 GPIO_PIN_13
 #define LEFT_IO_KEY_4 GPIO_PIN_12
 #define LEFT_IO_KEY_5 GPIO_PIN_11
-
 
 // Right keypad
 #define RIGHT_IO_KEY_GPIO GPIOD
@@ -51,8 +48,6 @@ typedef enum {
 #define RIGHT_IO_KEY_4 GPIO_PIN_1
 #define RIGHT_IO_KEY_5 GPIO_PIN_0
 
-
-// Test
 #define IO_KEY_GPIO(side) 	(side == LEFT ? LEFT_IO_KEY_GPIO : RIGHT_IO_KEY_GPIO)
 #define IO_KEY_1(side) 		(side == LEFT ? LEFT_IO_KEY_1 : RIGHT_IO_KEY_1)
 #define IO_KEY_2(side) 		(side == LEFT ? LEFT_IO_KEY_2 : RIGHT_IO_KEY_2)
