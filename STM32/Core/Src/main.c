@@ -35,7 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SEND_BUFFER_SIZE 6
+#define SEND_BUFFER_SIZE 7
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -49,7 +49,8 @@
 extern USBD_HandleTypeDef hUsbDeviceFS;
 
 struct GamepadReport_t {
-	uint16_t buttons;
+	uint16_t buttons_16;
+	uint8_t buttons_8;
 	int8_t left_x;
 	int8_t left_y;
 	int8_t right_x;
@@ -71,7 +72,8 @@ static void MX_GPIO_Init(void);
 
 
 void ResetGamepadReport() {
-	gamepadReport.buttons = 0;
+	gamepadReport.buttons_16 = 0;
+	gamepadReport.buttons_8 = 0;
 	gamepadReport.left_x = 0;
 	gamepadReport.left_y = 0;
 	gamepadReport.right_x = 0;
@@ -79,12 +81,13 @@ void ResetGamepadReport() {
 }
 
 void PrepareSendBuffer(uint8_t *buffer, GamepadReport_t *gamepadReport) {
-	buffer[0] = (uint8_t) (gamepadReport->buttons & 0x00FF);
-	buffer[1] = (uint8_t) (gamepadReport->buttons >> 8);
-	buffer[2] = gamepadReport->left_x;
-	buffer[3] = gamepadReport->left_y;
-	buffer[4] = gamepadReport->right_x;
-	buffer[5] = gamepadReport->right_y;
+	buffer[0] = (uint8_t) (gamepadReport->buttons_16 & 0x00FF);
+	buffer[1] = (uint8_t) (gamepadReport->buttons_16 >> 8);
+	buffer[2] = gamepadReport->buttons_8;
+	buffer[3] = gamepadReport->left_x;
+	buffer[4] = gamepadReport->left_y;
+	buffer[5] = gamepadReport->right_x;
+	buffer[6] = gamepadReport->right_y;
 }
 
 void GetUserInput() {
@@ -106,37 +109,37 @@ void GetUserInput() {
 	switch(leftKeypadValue) {
 		case 1: gamepadReport.left_x = -JOYSTICK_VALUE; break; // LEFT
 		case 2: gamepadReport.left_y = -JOYSTICK_VALUE; break;  // UP
-		case 3: break; // PRESS
+		case 3: gamepadReport.buttons_8 |= 1U << 0; break; // PRESS
 		case 4: gamepadReport.left_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.left_x = JOYSTICK_VALUE; break;  // RIGHT
 		case 6: break;
-		case 7: gamepadReport.buttons |= 1U << 7; break;
-		case 8: gamepadReport.buttons |= 1U << 6; break;
-		case 9: gamepadReport.buttons |= 1U << 5; break;
-		case 10: gamepadReport.buttons |= 1U << 4; break;
+		case 7: gamepadReport.buttons_16 |= 1U << 7; break;
+		case 8: gamepadReport.buttons_16 |= 1U << 6; break;
+		case 9: gamepadReport.buttons_16 |= 1U << 5; break;
+		case 10: gamepadReport.buttons_16 |= 1U << 4; break;
 		case 11: break;
-		case 12: gamepadReport.buttons |= 1U << 3; break;
-		case 13: gamepadReport.buttons |= 1U << 2; break;
-		case 14: gamepadReport.buttons |= 1U << 1; break;
-		case 15: gamepadReport.buttons |= 1U << 0; break;
+		case 12: gamepadReport.buttons_16 |= 1U << 3; break;
+		case 13: gamepadReport.buttons_16 |= 1U << 2; break;
+		case 14: gamepadReport.buttons_16 |= 1U << 1; break;
+		case 15: gamepadReport.buttons_16 |= 1U << 0; break;
 	}
 
 	switch(rightKeypadValue) {
 		case 1: gamepadReport.right_x = -JOYSTICK_VALUE; break; // LEFT
 		case 2: gamepadReport.right_y = -JOYSTICK_VALUE; break;  // UP
-		case 3: break; // PRESS
+		case 3: gamepadReport.buttons_8 |= 1U << 1; break; // PRESS
 		case 4: gamepadReport.right_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.right_x = JOYSTICK_VALUE; break;  // RIGHT
 		case 6: break; // K1
-		case 7: gamepadReport.buttons |= 1U << 8; break; // K2
-		case 8: gamepadReport.buttons |= 1U << 9; break; // K3
-		case 9: gamepadReport.buttons |= 1U << 10; break; // K4
-		case 10: gamepadReport.buttons |= 1U << 11; break; // K5
+		case 7: gamepadReport.buttons_16 |= 1U << 8; break; // K2
+		case 8: gamepadReport.buttons_16 |= 1U << 9; break; // K3
+		case 9: gamepadReport.buttons_16 |= 1U << 10; break; // K4
+		case 10: gamepadReport.buttons_16 |= 1U << 11; break; // K5
 		case 11: break; // K6
-		case 12: gamepadReport.buttons |= 1U << 12; break; // K7
-		case 13: gamepadReport.buttons |= 1U << 13; break; // K8
-		case 14: gamepadReport.buttons |= 1U << 14; break; // K9
-		case 15: gamepadReport.buttons |= 1U << 15; break; // K10
+		case 12: gamepadReport.buttons_16 |= 1U << 12; break; // K7
+		case 13: gamepadReport.buttons_16 |= 1U << 13; break; // K8
+		case 14: gamepadReport.buttons_16 |= 1U << 14; break; // K9
+		case 15: gamepadReport.buttons_16 |= 1U << 15; break; // K10
 	}
 
 	CHANGED = 1;
