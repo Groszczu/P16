@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_customhid.h"
+#include "5IO_Keypad.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -34,6 +35,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define SEND_BUFFER_SIZE 7
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +46,23 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+extern USBD_HandleTypeDef hUsbDeviceFS;
 
+struct GamepadReport_t {
+	uint16_t buttons_16;
+	uint8_t buttons_8;
+	int8_t left_x;
+	int8_t left_y;
+	int8_t right_x;
+	int8_t right_y;
+};
+typedef struct GamepadReport_t GamepadReport_t;
+
+uint8_t dataSendBuffer[SEND_BUFFER_SIZE];
+// global flag for detecting user input
+uint8_t CHANGED = 0;
+uint8_t SEND = 0;
+GamepadReport_t gamepadReport;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -52,13 +70,86 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
 
+
+void ResetGamepadReport() {
+	gamepadReport.buttons_16 = 0;
+	gamepadReport.buttons_8 = 0;
+	gamepadReport.left_x = 0;
+	gamepadReport.left_y = 0;
+	gamepadReport.right_x = 0;
+	gamepadReport.right_y = 0;
+}
+
+void PrepareSendBuffer(uint8_t *buffer, GamepadReport_t *gamepadReport) {
+	buffer[0] = (uint8_t) (gamepadReport->buttons_16 & 0x00FF);
+	buffer[1] = (uint8_t) (gamepadReport->buttons_16 >> 8);
+	buffer[2] = gamepadReport->buttons_8;
+	buffer[3] = gamepadReport->left_x;
+	buffer[4] = gamepadReport->left_y;
+	buffer[5] = gamepadReport->right_x;
+	buffer[6] = gamepadReport->right_y;
+}
+
+void GetUserInput() {
+	const uint8_t JOYSTICK_VALUE = 64;
+
+	uint32_t leftKeypadValue = KeypadScan(LEFT);
+	uint32_t rightKeypadValue = KeypadScan(RIGHT);
+	if (leftKeypadValue == 0 && rightKeypadValue == 0) {
+		if (CHANGED == 1) {
+			ResetGamepadReport();
+			PrepareSendBuffer(dataSendBuffer, &gamepadReport);
+
+			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, SEND_BUFFER_SIZE);
+			CHANGED = 0;
+		}
+		return;
+	}
+
+	switch(leftKeypadValue) {
+		case 1: gamepadReport.left_x = -JOYSTICK_VALUE; break; // LEFT
+		case 2: gamepadReport.left_y = -JOYSTICK_VALUE; break;  // UP
+		case 3: gamepadReport.buttons_8 |= 1U << 0; break; // PRESS
+		case 4: gamepadReport.left_y = JOYSTICK_VALUE; break; // DOWN
+		case 5: gamepadReport.left_x = JOYSTICK_VALUE; break;  // RIGHT
+		case 6: break;
+		case 7: gamepadReport.buttons_16 |= 1U << 7; break;
+		case 8: gamepadReport.buttons_16 |= 1U << 6; break;
+		case 9: gamepadReport.buttons_16 |= 1U << 5; break;
+		case 10: gamepadReport.buttons_16 |= 1U << 4; break;
+		case 11: break;
+		case 12: gamepadReport.buttons_16 |= 1U << 3; break;
+		case 13: gamepadReport.buttons_16 |= 1U << 2; break;
+		case 14: gamepadReport.buttons_16 |= 1U << 1; break;
+		case 15: gamepadReport.buttons_16 |= 1U << 0; break;
+	}
+
+	switch(rightKeypadValue) {
+		case 1: gamepadReport.right_x = -JOYSTICK_VALUE; break; // LEFT
+		case 2: gamepadReport.right_y = -JOYSTICK_VALUE; break;  // UP
+		case 3: gamepadReport.buttons_8 |= 1U << 1; break; // PRESS
+		case 4: gamepadReport.right_y = JOYSTICK_VALUE; break; // DOWN
+		case 5: gamepadReport.right_x = JOYSTICK_VALUE; break;  // RIGHT
+		case 6: break; // K1
+		case 7: gamepadReport.buttons_16 |= 1U << 8; break; // K2
+		case 8: gamepadReport.buttons_16 |= 1U << 9; break; // K3
+		case 9: gamepadReport.buttons_16 |= 1U << 10; break; // K4
+		case 10: gamepadReport.buttons_16 |= 1U << 11; break; // K5
+		case 11: break; // K6
+		case 12: gamepadReport.buttons_16 |= 1U << 12; break; // K7
+		case 13: gamepadReport.buttons_16 |= 1U << 13; break; // K8
+		case 14: gamepadReport.buttons_16 |= 1U << 14; break; // K9
+		case 15: gamepadReport.buttons_16 |= 1U << 15; break; // K10
+	}
+
+	CHANGED = 1;
+}
+
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-extern USBD_HandleTypeDef hUsbDeviceFS;
-
-uint8_t dataSendBuffer[3];
 /* USER CODE END 0 */
 
 /**
@@ -91,19 +182,24 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-  dataSendBuffer[0] = 0;
-  dataSendBuffer[1] = 0;
-  dataSendBuffer[2] = 0;
+  ResetGamepadReport();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  dataSendBuffer[0] = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
+	  GetUserInput();
 
-	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, 3);
-	  HAL_Delay(100);
+	  if (CHANGED == 1) {
+		  PrepareSendBuffer(dataSendBuffer, &gamepadReport);
+
+	  	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, SEND_BUFFER_SIZE);
+	  	  ResetGamepadReport();
+
+	  	HAL_Delay(50);
+	 }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -165,6 +261,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -176,11 +273,27 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : PB11 PB12 PB13 PB14 
+                           PB15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14 
+                          |GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /*Configure GPIO pins : PD12 PD13 PD14 PD15 */
   GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PD0 PD1 PD2 PD3 
+                           PD6 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3 
+                          |GPIO_PIN_6;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 }
