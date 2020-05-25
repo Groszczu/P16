@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "Types.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -60,8 +61,7 @@ typedef struct GamepadReport_t GamepadReport_t;
 
 uint8_t dataSendBuffer[SEND_BUFFER_SIZE];
 // global flag for detecting user input
-uint8_t CHANGED = 0;
-uint8_t SEND = 0;
+Bool CHANGED = false;
 GamepadReport_t gamepadReport;
 /* USER CODE END PV */
 
@@ -95,32 +95,23 @@ void GetUserInput() {
 
 	uint32_t leftKeypadValue = KeypadScan(LEFT);
 	uint32_t rightKeypadValue = KeypadScan(RIGHT);
-	if (leftKeypadValue == 0 && rightKeypadValue == 0) {
-		if (CHANGED == 1) {
-			ResetGamepadReport();
-			PrepareSendBuffer(dataSendBuffer, &gamepadReport);
 
-			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, SEND_BUFFER_SIZE);
-			CHANGED = 0;
-		}
-		return;
-	}
-
-	uint8_t changedLeft = 1;
-	uint8_t changedRight = 1;
+	Bool changedLeft = true;
+	Bool changedRight = true;
 
 	switch(leftKeypadValue) {
+		case 0: changedLeft = false; break;
 		case 1: gamepadReport.left_x = -JOYSTICK_VALUE; break; // LEFT
 		case 2: gamepadReport.left_y = -JOYSTICK_VALUE; break;  // UP
 		case 3: gamepadReport.buttons_8 |= 1U << 0; break; // PRESS
 		case 4: gamepadReport.left_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.left_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: changedLeft = 0; break;
+		case 6: changedLeft = false; break;
 		case 7: gamepadReport.buttons_16 |= 1U << 7; break;
 		case 8: gamepadReport.buttons_16 |= 1U << 6; break;
 		case 9: gamepadReport.buttons_16 |= 1U << 5; break;
 		case 10: gamepadReport.buttons_16 |= 1U << 4; break;
-		case 11: changedLeft = 0; break;
+		case 11: changedLeft = false; break;
 		case 12: gamepadReport.buttons_16 |= 1U << 3; break;
 		case 13: gamepadReport.buttons_16 |= 1U << 2; break;
 		case 14: gamepadReport.buttons_16 |= 1U << 1; break;
@@ -128,24 +119,41 @@ void GetUserInput() {
 	}
 
 	switch(rightKeypadValue) {
+		case 0: changedRight = false; break;
 		case 1: gamepadReport.right_x = -JOYSTICK_VALUE; break; // LEFT
 		case 2: gamepadReport.right_y = -JOYSTICK_VALUE; break;  // UP
 		case 3: gamepadReport.buttons_8 |= 1U << 1; break; // PRESS
 		case 4: gamepadReport.right_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.right_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: changedRight = 1; break; // K1
+		case 6: changedRight = false; break; // K1
 		case 7: gamepadReport.buttons_16 |= 1U << 8; break; // K2
 		case 8: gamepadReport.buttons_16 |= 1U << 9; break; // K3
 		case 9: gamepadReport.buttons_16 |= 1U << 10; break; // K4
 		case 10: gamepadReport.buttons_16 |= 1U << 11; break; // K5
-		case 11: changedRight = 1; break; // K6
+		case 11: changedRight = false; break; // K6
 		case 12: gamepadReport.buttons_16 |= 1U << 12; break; // K7
 		case 13: gamepadReport.buttons_16 |= 1U << 13; break; // K8
 		case 14: gamepadReport.buttons_16 |= 1U << 14; break; // K9
 		case 15: gamepadReport.buttons_16 |= 1U << 15; break; // K10
 	}
 
-	CHANGED = 1;
+	// if no button has been pressed (or button without any functionality)
+	if (changedLeft == false && changedRight == false) {
+		// and last time this function was called there user input was detected
+		if (CHANGED == true) {
+			// reset buffer values and send empty buffer to the device
+			ResetGamepadReport();
+			PrepareSendBuffer(dataSendBuffer, &gamepadReport);
+
+			USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, SEND_BUFFER_SIZE);
+			CHANGED = false;
+		}
+		//else return without sending buffer
+		return;
+	}
+
+	// if some buttons were pressed set CHANGED flag to true
+	CHANGED = true;
 }
 
 
@@ -194,7 +202,7 @@ int main(void)
   {
 	  GetUserInput();
 
-	  if (CHANGED == 1) {
+	  if (CHANGED == true) {
 		  PrepareSendBuffer(dataSendBuffer, &gamepadReport);
 
 	  	  USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, dataSendBuffer, SEND_BUFFER_SIZE);
