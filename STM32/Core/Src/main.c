@@ -106,18 +106,21 @@ void GetUserInput() {
 		return;
 	}
 
+	uint8_t changedLeft = 1;
+	uint8_t changedRight = 1;
+
 	switch(leftKeypadValue) {
 		case 1: gamepadReport.left_x = -JOYSTICK_VALUE; break; // LEFT
 		case 2: gamepadReport.left_y = -JOYSTICK_VALUE; break;  // UP
 		case 3: gamepadReport.buttons_8 |= 1U << 0; break; // PRESS
 		case 4: gamepadReport.left_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.left_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: break;
+		case 6: changedLeft = 0; break;
 		case 7: gamepadReport.buttons_16 |= 1U << 7; break;
 		case 8: gamepadReport.buttons_16 |= 1U << 6; break;
 		case 9: gamepadReport.buttons_16 |= 1U << 5; break;
 		case 10: gamepadReport.buttons_16 |= 1U << 4; break;
-		case 11: break;
+		case 11: changedLeft = 0; break;
 		case 12: gamepadReport.buttons_16 |= 1U << 3; break;
 		case 13: gamepadReport.buttons_16 |= 1U << 2; break;
 		case 14: gamepadReport.buttons_16 |= 1U << 1; break;
@@ -130,12 +133,12 @@ void GetUserInput() {
 		case 3: gamepadReport.buttons_8 |= 1U << 1; break; // PRESS
 		case 4: gamepadReport.right_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.right_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: break; // K1
+		case 6: changedRight = 1; break; // K1
 		case 7: gamepadReport.buttons_16 |= 1U << 8; break; // K2
 		case 8: gamepadReport.buttons_16 |= 1U << 9; break; // K3
 		case 9: gamepadReport.buttons_16 |= 1U << 10; break; // K4
 		case 10: gamepadReport.buttons_16 |= 1U << 11; break; // K5
-		case 11: break; // K6
+		case 11: changedRight = 1; break; // K6
 		case 12: gamepadReport.buttons_16 |= 1U << 12; break; // K7
 		case 13: gamepadReport.buttons_16 |= 1U << 13; break; // K8
 		case 14: gamepadReport.buttons_16 |= 1U << 14; break; // K9
