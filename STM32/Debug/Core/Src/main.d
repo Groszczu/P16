@@ -36,7 +36,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
- ../Core/Inc/5IO_Keypad.h
+ ../Core/Inc/5IO_Keypad.h ../Core/Inc/Types.h
 
 ../Core/Inc/main.h:
 
@@ -115,3 +115,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h:
 
 ../Core/Inc/5IO_Keypad.h:
+
+../Core/Inc/Types.h:
