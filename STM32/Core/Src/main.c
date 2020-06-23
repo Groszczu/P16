@@ -20,13 +20,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "Types.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_customhid.h"
 #include "5IO_Keypad.h"
+#include "Types.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -106,14 +106,14 @@ void GetUserInput() {
 		case 3: gamepadReport.buttons_8 |= 1U << 0; break; // PRESS
 		case 4: gamepadReport.left_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.left_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: changedLeft = false; break;
-		case 7: gamepadReport.buttons_16 |= 1U << 7; break;
-		case 8: gamepadReport.buttons_16 |= 1U << 6; break;
+		case 6: gamepadReport.buttons_16 |= 1U << 7; break;
+		case 7: gamepadReport.buttons_16 |= 1U << 6; break;
+		case 8: changedLeft = false; break;
 		case 9: gamepadReport.buttons_16 |= 1U << 5; break;
 		case 10: gamepadReport.buttons_16 |= 1U << 4; break;
-		case 11: changedLeft = false; break;
-		case 12: gamepadReport.buttons_16 |= 1U << 3; break;
-		case 13: gamepadReport.buttons_16 |= 1U << 2; break;
+		case 11: gamepadReport.buttons_16 |= 1U << 3; break;
+		case 12: gamepadReport.buttons_16 |= 1U << 2; break;
+		case 13: changedLeft = false; break;
 		case 14: gamepadReport.buttons_16 |= 1U << 1; break;
 		case 15: gamepadReport.buttons_16 |= 1U << 0; break;
 	}
@@ -125,14 +125,14 @@ void GetUserInput() {
 		case 3: gamepadReport.buttons_8 |= 1U << 1; break; // PRESS
 		case 4: gamepadReport.right_y = JOYSTICK_VALUE; break; // DOWN
 		case 5: gamepadReport.right_x = JOYSTICK_VALUE; break;  // RIGHT
-		case 6: changedRight = false; break; // K1
-		case 7: gamepadReport.buttons_16 |= 1U << 8; break; // K2
-		case 8: gamepadReport.buttons_16 |= 1U << 9; break; // K3
+		case 6: gamepadReport.buttons_16 |= 1U << 8; break;  // K1
+		case 7: gamepadReport.buttons_16 |= 1U << 9; break; // K2
+		case 8: changedRight = false; break; // K3
 		case 9: gamepadReport.buttons_16 |= 1U << 10; break; // K4
 		case 10: gamepadReport.buttons_16 |= 1U << 11; break; // K5
-		case 11: changedRight = false; break; // K6
-		case 12: gamepadReport.buttons_16 |= 1U << 12; break; // K7
-		case 13: gamepadReport.buttons_16 |= 1U << 13; break; // K8
+		case 11: gamepadReport.buttons_16 |= 1U << 12; break; // K6
+		case 12: gamepadReport.buttons_16 |= 1U << 13; break; // K7
+		case 13: changedRight = false; break; // K8
 		case 14: gamepadReport.buttons_16 |= 1U << 14; break; // K9
 		case 15: gamepadReport.buttons_16 |= 1U << 15; break; // K10
 	}
@@ -271,18 +271,9 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin : PA0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB11 PB12 PB13 PB14 
                            PB15 */
@@ -291,13 +282,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PD12 PD13 PD14 PD15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PD0 PD1 PD2 PD3 
                            PD6 */
