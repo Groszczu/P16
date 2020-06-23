@@ -4,7 +4,7 @@
 <p align="center">
   <img src="/images/without_case.jpg" width="400" title="without-case">
   <img src="/images/back.jpg" width="400" title="back">
-  <img src="/images/front.jpg" width="500" height="300" title="front">
+  <img src="/images/front.jpg" width="500" title="front">
 </p>
 
 ## O projekcie
